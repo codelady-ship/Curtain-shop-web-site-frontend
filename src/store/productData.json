@@ -1,0 +1,314 @@
+[
+  {
+    "id": 1,
+    "name": "Venesiya Eksklüziv İtalyan Tülü",
+    "category": "Tüllər",
+    "room": "Qonaq otağı",
+    "rating": 5.0,
+    "isPopular": true,
+    "isDiscount": true,
+    "description": "Klassik İtalyan zərifliyi ilə toxunmuş premium tül. Otağınıza həm işıq, həm də məxfilik qatır.",
+    "colors": [
+      { "name": "Krem", "code": "#FFFDD0", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" },
+      { "name": "Ağ", "code": "#FFFFFF", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Bej", "code": "#F5F5DC", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Gümüşü", "code": "#C0C0C0", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
+      { "name": "Qızılı", "code": "#D4AF37", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" }
+    ],
+    "sizeOptions": [
+      { "size": "200x250", "price": 45.00, "oldPrice": 65.00 },
+      { "size": "250x250", "price": 55.00, "oldPrice": 75.00 },
+      { "size": "300x250", "price": 70.00, "oldPrice": 95.00 }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Royal Navy Velur Fonluq",
+    "category": "Fonluqlar",
+    "room": "Yataq otağı",
+    "rating": 4.8,
+    "isPopular": true,
+    "isDiscount": true,
+    "description": "Yüksək keyfiyyətli velur materialdan hazırlanmış blackout fonluq. Tam qaranlıq təmin edir.",
+    "colors": [
+      { "name": "Tünd Göy", "code": "#000080", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
+      { "name": "Antrasit", "code": "#383E42", "mainImage": "https://images.unsplash.com/photo-1548611635-b6e78bb1d594" },
+      { "name": "Zümrüd", "code": "#004B49", "mainImage": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af" },
+      { "name": "Bordo", "code": "#800000", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" },
+      { "name": "Qara", "code": "#000000", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" }
+    ],
+    "sizeOptions": [
+      { "size": "150x270", "price": 85.00, "oldPrice": 120.00 },
+      { "size": "200x270", "price": 110.00, "oldPrice": 150.00 }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Vogue Wood Zebra",
+    "category": "Zebra pərdələr",
+    "room": "Ofis",
+    "rating": 4.4,
+    "isPopular": true,
+    "isDiscount": false,
+    "description": "Modern ofis və mətbəxlər üçün taxta teksturalı zebra pərdə sistemi.",
+    "colors": [
+      { "name": "Qəhvəyi", "code": "#4B3621", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" },
+      { "name": "Palıd", "code": "#966F33", "mainImage": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688" },
+      { "name": "Qoz", "code": "#5D4037", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Açıq Taxta", "code": "#D2B48C", "mainImage": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af" },
+      { "name": "Boz Taxta", "code": "#8E8E8E", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" }
+    ],
+    "sizeOptions": [
+      { "size": "100x200", "price": 60.00 },
+      { "size": "150x200", "price": 85.00 },
+      { "size": "200x200", "price": 110.00 }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Minimalist Kətan Tül",
+    "category": "Tüllər",
+    "room": "Mətbəx",
+    "rating": 4.6,
+    "isPopular": false,
+    "isDiscount": true,
+    "description": "Sadəlik sevənlər üçün təbii kətan görünüşlü, yuyulması asan tül.",
+    "colors": [
+      { "name": "Boz", "code": "#808080", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Bej", "code": "#D2B48C", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Ağ", "code": "#FFFFFF", "mainImage": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af" },
+      { "name": "Südlü", "code": "#FFF8DC", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" },
+      { "name": "Qəhvəyi", "code": "#A52A2A", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" }
+    ],
+    "sizeOptions": [
+      { "size": "150x250", "price": 25.00, "oldPrice": 35.00 },
+      { "size": "200x250", "price": 35.00, "oldPrice": 45.00 }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Saray Üslublu Fonluq",
+    "category": "Fonluqlar",
+    "room": "Qonaq otağı",
+    "rating": 4.9,
+    "isPopular": true,
+    "isDiscount": false,
+    "description": "Ağır naxışlı, ipək qarışıqlı lüks fonluq. Klassik interyerlər üçün.",
+    "colors": [
+      { "name": "Qızılı", "code": "#D4AF37", "mainImage": "https://images.unsplash.com/photo-1540518614846-7eded433c457" },
+      { "name": "Gümüşü", "code": "#C0C0C0", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Tunc", "code": "#CD7F32", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
+      { "name": "Bordo", "code": "#800000", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Krem", "code": "#FFFDD0", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" }
+    ],
+    "sizeOptions": [
+      { "size": "200x270", "price": 180.00 },
+      { "size": "250x270", "price": 220.00 }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Buludlu Uşaq Tülü",
+    "category": "Tüllər",
+    "room": "Uşaq otağı",
+    "rating": 4.7,
+    "isPopular": false,
+    "isDiscount": true,
+    "description": "Yumşaq toxunuşlu, uşaqların xəyal dünyasına uyğun naxışlı tül.",
+    "colors": [
+      { "name": "Mavi", "code": "#ADD8E6", "mainImage": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af" },
+      { "name": "Çəhrayı", "code": "#FFC0CB", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Sarı", "code": "#FFFFE0", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Ağ", "code": "#FFFFFF", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" },
+      { "name": "Yaşıl", "code": "#90EE90", "mainImage": "https://images.unsplash.com/photo-1548611635-b6e78bb1d594" }
+    ],
+    "sizeOptions": [
+      { "size": "200x240", "price": 30.00, "oldPrice": 45.00 }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Premium Aluminyum Jalüz",
+    "category": "Jalüzlər",
+    "room": "Ofis",
+    "rating": 4.3,
+    "isPopular": false,
+    "isDiscount": true,
+    "description": "Dayanıqlı, günəş şüalarını tam idarə etməyə imkan verən metal jalüz.",
+    "colors": [
+      { "name": "Gümüşü", "code": "#C0C0C0", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" },
+      { "name": "Qara", "code": "#000000", "mainImage": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688" },
+      { "name": "Boz", "code": "#808080", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Ağ", "code": "#FFFFFF", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Mavi", "code": "#1a2a6c", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" }
+    ],
+    "sizeOptions": [
+      { "size": "80x160", "price": 35.00, "oldPrice": 50.00 },
+      { "size": "120x160", "price": 50.00, "oldPrice": 70.00 }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Bambuk Təbii Jalüz",
+    "category": "Jalüzlər",
+    "room": "Eyvan",
+    "rating": 4.5,
+    "isPopular": false,
+    "isDiscount": true,
+    "description": "Ekoloji təmiz bambukdan hazırlanmış roll pərdə sistemi.",
+    "colors": [
+      { "name": "Natural", "code": "#D2B48C", "mainImage": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688" },
+      { "name": "Tünd Bambuk", "code": "#8B4513", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" },
+      { "name": "Südlü", "code": "#F5F5DC", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Qəhvəyi", "code": "#5D4037", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Qara", "code": "#2C2C2C", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" }
+    ],
+    "sizeOptions": [
+      { "size": "100x180", "price": 45.00, "oldPrice": 65.00 }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Gümüşü Simli Tül",
+    "category": "Tüllər",
+    "room": "Qonaq otağı",
+    "rating": 4.8,
+    "isPopular": true,
+    "isDiscount": true,
+    "description": "İçərisindən zərif gümüşü simlər keçən, axşam işığında parıldayan xüsusi tül.",
+    "colors": [
+      { "name": "Gümüşü", "code": "#C0C0C0", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Ağ", "code": "#FFFFFF", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Qara", "code": "#000000", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
+      { "name": "Göy", "code": "#000080", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" },
+      { "name": "Bənövşəyi", "code": "#4B0082", "mainImage": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af" }
+    ],
+    "sizeOptions": [
+      { "size": "250x250", "price": 55.00, "oldPrice": 80.00 },
+      { "size": "300x250", "price": 70.00, "oldPrice": 100.00 }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Zümrüd Yaşılı Fonluq",
+    "category": "Fonluqlar",
+    "room": "Yataq otağı",
+    "rating": 4.9,
+    "isPopular": true,
+    "isDiscount": true,
+    "description": "Dərin zümrüd rəngli, yumşaq toxunuşlu satin fonluq.",
+    "colors": [
+      { "name": "Yaşıl", "code": "#004B49", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
+      { "name": "Meşə Yaşılı", "code": "#013220", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Nanə", "code": "#98FF98", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Xaki", "code": "#C3B091", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" },
+      { "name": "Zeytun", "code": "#808000", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" }
+    ],
+    "sizeOptions": [
+      { "size": "150x270", "price": 95.00, "oldPrice": 135.00 }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Modern Blackout Zebra",
+    "category": "Zebra pərdələr",
+    "room": "Yataq otağı",
+    "rating": 4.7,
+    "isPopular": true,
+    "isDiscount": false,
+    "description": "Həm işığı tənzimləyən, həm də tam qapanma təmin edən zebra pərdə.",
+    "colors": [
+      { "name": "Antrasit", "code": "#383E42", "mainImage": "https://images.unsplash.com/photo-1548611635-b6e78bb1d594" },
+      { "name": "Qara", "code": "#000000", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
+      { "name": "Boz", "code": "#808080", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Südlü", "code": "#FFFDD0", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Qəhvəyi", "code": "#4B3621", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" }
+    ],
+    "sizeOptions": [
+      { "size": "150x200", "price": 90.00 },
+      { "size": "200x200", "price": 120.00 }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "İpəkli Salon Tülü",
+    "category": "Tüllər",
+    "room": "Qonaq otağı",
+    "rating": 5.0,
+    "isPopular": true,
+    "isDiscount": false,
+    "description": "Əsl ipək qarışımlı, lüks və tökülən parça quruluşlu salon tülü.",
+    "colors": [
+      { "name": "Krem", "code": "#FFFDD0", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" },
+      { "name": "Ağ", "code": "#FFFFFF", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Şampan", "code": "#F7E7CE", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Bej", "code": "#F5F5DC", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
+      { "name": "Qızılı", "code": "#D4AF37", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" }
+    ],
+    "sizeOptions": [
+      { "size": "300x250", "price": 150.00 },
+      { "size": "400x250", "price": 190.00 }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Bej Jakarlı Fonluq",
+    "category": "Fonluqlar",
+    "room": "Qonaq otağı",
+    "rating": 4.5,
+    "isPopular": false,
+    "isDiscount": true,
+    "description": "Özü naxışlı jakar parçadan fonluq. Uzunömürlü və rəngi solmayan.",
+    "colors": [
+      { "name": "Bej", "code": "#F5F5DC", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
+      { "name": "Karamel", "code": "#C68E17", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Kofe", "code": "#6F4E37", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Krem", "code": "#FFFDD0", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" },
+      { "name": "Qumlu", "code": "#C2B280", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" }
+    ],
+    "sizeOptions": [
+      { "size": "200x270", "price": 80.00, "oldPrice": 115.00 }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Double Zebra - Gecə/Gündüz",
+    "category": "Zebra pərdələr",
+    "room": "Eyvan",
+    "rating": 4.6,
+    "isPopular": false,
+    "isDiscount": true,
+    "description": "İkiqat parça quruluşu ilə günorta kölgə, axşam isə tam məxfilik təmin edir.",
+    "colors": [
+      { "name": "Südlü", "code": "#FFF8DC", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" },
+      { "name": "Boz", "code": "#808080", "mainImage": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688" },
+      { "name": "Ağ", "code": "#FFFFFF", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Şokolad", "code": "#483C32", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Lila", "code": "#C8A2C8", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" }
+    ],
+    "sizeOptions": [
+      { "size": "150x180", "price": 75.00, "oldPrice": 100.00 }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Məxmər Fonluq - Şərab Rəngi",
+    "category": "Fonluqlar",
+    "room": "Qonaq otağı",
+    "rating": 5.0,
+    "isPopular": true,
+    "isDiscount": true,
+    "description": "Kral üslubunda qalın və yumşaq məxmər fonluq. İstilik izolyasiyasına kömək edir.",
+    "colors": [
+      { "name": "Bordo", "code": "#800000", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
+      { "name": "Qırmızı", "code": "#FF0000", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
+      { "name": "Bənövşəyi", "code": "#4B0082", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
+      { "name": "Tünd Yaşıl", "code": "#006400", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" },
+      { "name": "Qızılı", "code": "#D4AF37", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" }
+    ],
+    "sizeOptions": [
+      { "size": "200x270", "price": 140.00, "oldPrice": 190.00 },
+      { "size": "250x270", "price": 175.00, "oldPrice": 230.00 }
+    ]
+  }
+]

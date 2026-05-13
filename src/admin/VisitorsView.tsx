@@ -4,7 +4,7 @@ import useAdminStore from '../store/adminStore.js';
 
 const VisitorsView = () => {
   const activeFilter = useAdminStore((state) => state.activeFilter);
-
+  
   return (
     <div className="space-y-6 p-4 animate-in slide-in-from-right-5">
       

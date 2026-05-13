@@ -1,104 +1,187 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, X, Phone, User } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { X, CheckCircle2, Loader2, Phone, User, Upload } from "lucide-react";
 
-interface LeadModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (data: { name: string; phone: string }) => void;
-  isSuccess: boolean;
-}
+const LeadModal = ({
+  isOpen,
+  onClose,
+  modalType,
+  onConfirm,
+  isSuccess,
+  errors: backendErrors,
+}) => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phone: "",
+    file: null,
+  });
+  const [localErrors, setLocalErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-const LeadModal = ({ isOpen, onClose, onConfirm, isSuccess }: LeadModalProps) => {
-  
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get('name') as string,
-      phone: formData.get('phone') as string,
-    };
-    onConfirm(data);
+  // Modal hər dəfə açılanda datanı sıfırla
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({ fullName: "", phone: "", file: null });
+      setLocalErrors({});
+      setLoading(false);
+    }
+  }, [isOpen]);
+
+  // Frontend validasiyası
+  const validate = () => {
+    let err = {};
+    if (!formData.fullName.trim()) err.fullName = "Ad Soyad mütləqdir";
+    if (!/^\d+$/.test(formData.phone) || formData.phone.length < 9)
+      err.phone = "Düzgün nömrə daxil edin";
+    if (modalType === "VISUAL" && !formData.file)
+      err.file = "Şəkil yükləmək mütləqdir";
+
+    setLocalErrors(err);
+    return Object.keys(err).length === 0;
   };
 
+  // Düyməyə klik edəndə işləyən əsas funksiya
+  const handleSubmit = async () => {
+    if (validate()) {
+      setLoading(true);
+      try {
+        // HomePage-dən gələn onConfirm funksiyasını çağırırıq
+        await onConfirm({
+          fullName: formData.fullName,
+          phone: formData.phone,
+          image: formData.file, // Backend-də "image" olaraq gözlənilir
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  if (!isOpen) return null;
+
+  // Backend və local xətaları birləşdiririk
+  const allErrors = { ...localErrors, ...backendErrors };
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
-          {/* Arxa fon (Overlay) */}
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-black/90 backdrop-blur-md"
-          />
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+      <div className="bg-white rounded-[2rem] w-full max-w-md p-6 md:p-8 relative shadow-2xl">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-slate-400 hover:text-black transition-all"
+        >
+          <X size={24} />
+        </button>
 
-          {/* Modalın özü */}
-          <motion.div 
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            className="relative bg-white w-full max-w-lg rounded-[40px] shadow-2xl overflow-hidden"
-          >
-            <div className="p-10 md:p-16 text-center">
-              {/* Bağlama düyməsi */}
-              <button 
-                onClick={onClose} 
-                className="absolute top-8 right-8 text-gray-400 hover:text-black transition-colors"
-              >
-                <X size={24} />
-              </button>
-
-              {isSuccess ? (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="py-10"
-                >
-                  <CheckCircle2 size={48} className="text-green-600 mx-auto mb-6" />
-                  <h2 className="text-4xl font-serif mb-4">Uğurludur!</h2>
-                  <p className="text-gray-500 leading-relaxed">Tezliklə sizinlə əlaqə saxlayacağıq.</p>
-                </motion.div>
-              ) : (
-                <>
-                  <h2 className="text-4xl font-serif mb-10 text-black">Sifariş Formu</h2>
-                  <form onSubmit={handleFormSubmit} className="space-y-5">
-                    <div className="relative group text-left">
-                      <User className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-yellow-600 transition-colors" size={20} />
-                      <input 
-                        name="name"
-                        required 
-                        type="text" 
-                        placeholder="Adınız" 
-                        className="w-full bg-gray-50 border-2 border-transparent rounded-2xl py-5 pl-14 pr-6 focus:border-yellow-600 focus:bg-white outline-none transition-all text-black" 
-                      />
-                    </div>
-                    
-                    <div className="relative group text-left">
-                      <Phone className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-yellow-600 transition-colors" size={20} />
-                      <input 
-                        name="phone"
-                        required 
-                        type="tel" 
-                        placeholder="Nömrəniz" 
-                        className="w-full bg-gray-50 border-2 border-transparent rounded-2xl py-5 pl-14 pr-6 focus:border-yellow-600 focus:bg-white outline-none transition-all text-black" 
-                      />
-                    </div>
-
-                    <button 
-                      type="submit"
-                      className="w-full bg-black text-white py-6 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-yellow-600 transition-all duration-300 shadow-lg"
-                    >
-                      Göndər
-                    </button>
-                  </form>
-                </>
-              )}
+        {isSuccess ? (
+          <div className="text-center py-6 animate-in zoom-in">
+            <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 size={32} />
             </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+            <h2 className="text-xl font-black text-slate-900 mb-2">
+              Təşəkkür edirik!
+            </h2>
+            <p className="text-slate-500 text-sm font-medium px-4">
+              {modalType === "VISUAL"
+                ? "Otağınızın dizaynı hazırlanıb ən qısa zamanda WhatsApp nömrənizə göndəriləcək."
+                : "Müraciətiniz qəbul edildi. Tezliklə mütəxəssisimiz sizinlə əlaqə saxlayacaq."}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-5">
+            <h2 className="text-xl font-black uppercase text-center text-slate-900 italic">
+              {modalType === "VISUAL" ? "Virtual Dizayn" : "Ölçü Alımı"}
+            </h2>
+
+            <div className="space-y-3">
+              {/* Ad Soyad Input */}
+              <div className="relative">
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  size={18}
+                />
+                <input
+                  type="text"
+                  placeholder="Ad Soyad"
+                  className={`w-full pl-10 pr-4 py-3 bg-slate-50 rounded-xl outline-none border-2 transition-all text-sm ${allErrors.fullName ? "border-red-400" : "border-transparent focus:border-[#C5A059]"}`}
+                  value={formData.fullName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
+                />
+              </div>
+              {allErrors.fullName && (
+                <p className="text-red-500 text-[10px] font-bold ml-2">
+                  {allErrors.fullName}
+                </p>
+              )}
+
+              {/* Telefon Input */}
+              <div className="relative">
+                <Phone
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  size={18}
+                />
+                <input
+                  type="tel"
+                  placeholder="0500000000"
+                  className={`w-full pl-10 pr-4 py-3 bg-slate-50 rounded-xl outline-none border-2 transition-all text-sm ${allErrors.phone ? "border-red-400" : "border-transparent focus:border-[#C5A059]"}`}
+                  value={formData.phone}
+                  onChange={(e) => {
+                    if (/^\d*$/.test(e.target.value))
+                      setFormData({ ...formData, phone: e.target.value });
+                  }}
+                />
+              </div>
+              {allErrors.phone && (
+                <p className="text-red-500 text-[10px] font-bold ml-2">
+                  {allErrors.phone}
+                </p>
+              )}
+
+              {/* Şəkil Yükləmə (Yalnız VISUAL tipində) */}
+              {modalType === "VISUAL" && (
+                <div className="space-y-1">
+                  <label
+                    className={`flex flex-col items-center justify-center w-full h-28 border-2 border-dashed rounded-xl cursor-pointer transition-all ${allErrors.file ? "border-red-300 bg-red-50" : "border-slate-200 bg-slate-50 hover:bg-slate-100"}`}
+                  >
+                    <Upload className="text-slate-400 mb-1" size={20} />
+                    <span className="text-[10px] text-slate-500 font-bold uppercase text-center px-2">
+                      {formData.file
+                        ? formData.file.name
+                        : "Otağın şəklini yükləyin"}
+                    </span>
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      onChange={(e) =>
+                        setFormData({ ...formData, file: e.target.files[0] })
+                      }
+                    />
+                  </label>
+                  {allErrors.file && (
+                    <p className="text-red-500 text-[10px] font-bold ml-2">
+                      {allErrors.file}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full py-4 bg-[#0A1128] text-white rounded-xl font-black uppercase tracking-widest text-sm hover:bg-[#C5A059] transition-all flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <Loader2 className="animate-spin" size={20} />
+                ) : (
+                  "Təsdiqlə"
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

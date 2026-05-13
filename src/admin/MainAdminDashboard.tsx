@@ -3,7 +3,7 @@ import AdminSidebar from './AdminSidebar';
 import LeadsTable from './LeadsTable';
 import AddProduct from './AddProduct';
 import useAdminStore from '../store/adminStore.js';
-import AllModels from './AllModels';
+import AllModels from '../components/AllModels';
 import VisitorsView from './VisitorsView';
 import DashboardView from './DashboardView';
 
@@ -32,7 +32,7 @@ const MainAdminDashboard = () => {
       case 'dashboard':
         return <DashboardView />;
       case 'all-models':
-        return <AllModels />;
+        return <AllModels isAdmin={true} />;
       case 'visitors':
         return <VisitorsView filter="ALL" />;
       case 'add-model':

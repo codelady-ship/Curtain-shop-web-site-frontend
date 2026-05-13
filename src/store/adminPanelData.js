@@ -1,11 +1,11 @@
 // Statistika Kartları 
 export const stats = [
   { id: 'ALL', label: "Hamısı", value: "20", iconName: "eye", trend: "Canlı", isPositive: true, bgColor: "bg-slate-50" },
+  {id: 'ORDERS', label: 'SİFARİŞLƏR',value: '45', iconName: 'shopping',bgColor: 'bg-purple-50',trend: '+8', isPositive: true},
   { id: 'DISCOUNT', label: "Endirim Kodu", value: "124", iconName: "ticket", trend: "Yeni", isPositive: true, bgColor: "bg-red-50" },
   { id: 'VISUAL', label: "Vizualizasiya", value: "38", iconName: "image", trend: "+12", isPositive: true, bgColor: "bg-blue-50" },
-  { id: 'CART', label: "Səbətə Atanlar", value: "28", iconName: "shopping", trend: "+5", isPositive: true, bgColor: "bg-purple-50" },
+  { id: 'MEASURE', label: "Ölçü Alımı", value: "12", iconName: "ruler", trend: "Yeni", isPositive: true, bgColor: "bg-amber-50" },
   { id: 'HEART', label: "Ürək Qoyanlar", value: "156", iconName: "heart", trend: "+12", isPositive: true, bgColor: "bg-rose-50" },
-  { id: 'MEASURE', label: "Ölçü Alımı", value: "12", iconName: "ruler", trend: "Yeni", isPositive: true, bgColor: "bg-amber-50" }
 ];
 
 // Müştərilərin Aktivlik Datası
@@ -29,7 +29,43 @@ export const leadsData = [
   { id: 17, fullName: "Fuad Əliyev", phone: "070-555-44-33", status: "ZƏNG EDİLDİ", date: "05.04.2026", fullDate: "2026-04-05T12:10:00", source: 'VISUAL', customerImage: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400", wishlist: [], cart: [] },
   { id: 18, fullName: "Aytən Quliyeva", phone: "051-666-77-88", status: "YENİ", date: "05.04.2026", fullDate: "2026-04-05T16:40:00", source: 'DISCOUNT', customerImage: null, wishlist: ["Taxta Stor"], cart: [] },
   { id: 19, fullName: "Samir Cavadov", phone: "050-222-11-33", status: "YENİ", date: "06.04.2026", fullDate: "2026-04-06T09:15:00", source: 'MEASURE', customerImage: null, wishlist: ["Şifon Pərdə"], cart: [] },
-  { id: 20, fullName: "Lalə İsmayılova", phone: "055-333-44-22", status: "ZƏNG EDİLDİ", date: "06.04.2026", fullDate: "2026-04-06T14:50:00", source: 'HEART', customerImage: null, wishlist: ["Fransız Tülü"], cart: [] }
+  { id: 20, fullName: "Lalə İsmayılova", phone: "055-333-44-22", status: "ZƏNG EDİLDİ", date: "06.04.2026", fullDate: "2026-04-06T14:50:00", source: 'HEART', customerImage: null, wishlist: ["Fransız Tülü"], cart: [] },
+  { 
+    id: 21, 
+    fullName: "Kamran Əliyev", 
+    phone: "050-777-11-22", 
+    status: "YENİ", 
+    date: "07.04.2026", 
+    fullDate: "2026-04-07T11:20:00", 
+    source: 'ORDERS', // Yuxarıdakı yeni "Sifarişlər" kartına düşəcək
+    customerImage: null, 
+    wishlist: ["Məxmər Pərdə"], 
+    cart: ["Gümüşü İpək Tül", "Qızılı Karniz"] // Sifariş verdiyi konkret məhsullar
+  },
+  { 
+    id: 22, 
+    fullName: "Leyla Hacıyeva", 
+    phone: "070-555-99-88", 
+    status: "YENİ", 
+    date: "07.04.2026", 
+    fullDate: "2026-04-07T15:45:00", 
+    source: 'ORDERS', 
+    customerImage: null, 
+    wishlist: [], 
+    cart: ["Zebra Stor (Mətbəx üçün)"] 
+  },
+  { 
+    id: 23, 
+    fullName: "Emin Məmmədov", 
+    phone: "055-222-33-44", 
+    status: "ZƏNG EDİLDİ", 
+    date: "08.04.2026", 
+    fullDate: "2026-04-08T09:30:00", 
+    source: 'ORDERS', 
+    customerImage: null, 
+    wishlist: ["Blackout Pərdə"], 
+    cart: ["Motorlu Jalüz Sitemi"] 
+  }
 ];
 
 export const yearlyStats = [

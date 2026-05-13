@@ -4,7 +4,6 @@
     "name": "Venesiya Eksklüziv İtalyan Tülü",
     "category": "Tüllər",
     "room": "Qonaq otağı",
-    "rating": 5.0,
     "isPopular": true,
     "isDiscount": true,
     "description": "Klassik İtalyan zərifliyi ilə toxunmuş premium tül. Otağınıza həm işıq, həm də məxfilik qatır.",
@@ -19,12 +18,12 @@
       { "size": "200x250", "price": 45.00, "oldPrice": 65.00 },
       { "size": "250x250", "price": 55.00, "oldPrice": 75.00 },
       { "size": "300x250", "price": 70.00, "oldPrice": 95.00 }
-    ]
+    ] 
   },
   {
     "id": 2,
     "name": "Royal Navy Velur Fonluq",
-    "category": "Fonluqlar",
+    "category": "Kornizlər",
     "room": "Yataq otağı",
     "rating": 4.8,
     "isPopular": true,
@@ -45,7 +44,7 @@
   {
     "id": 3,
     "name": "Vogue Wood Zebra",
-    "category": "Zebra pərdələr",
+    "category": "Dəst pərdələr",
     "room": "Ofis",
     "rating": 4.4,
     "isPopular": true,
@@ -67,7 +66,7 @@
   {
     "id": 4,
     "name": "Minimalist Kətan Tül",
-    "category": "Tüllər",
+    "category": "Kornizlər",
     "room": "Mətbəx",
     "rating": 4.6,
     "isPopular": false,
@@ -151,7 +150,7 @@
     "id": 8,
     "name": "Bambuk Təbii Jalüz",
     "category": "Jalüzlər",
-    "room": "Eyvan",
+    "room": "Uşaq otağı",
     "rating": 4.5,
     "isPopular": false,
     "isDiscount": true,
@@ -170,7 +169,7 @@
   {
     "id": 9,
     "name": "Gümüşü Simli Tül",
-    "category": "Tüllər",
+    "category": "Günəşliklər",
     "room": "Qonaq otağı",
     "rating": 4.8,
     "isPopular": true,
@@ -211,7 +210,7 @@
   {
     "id": 11,
     "name": "Modern Blackout Zebra",
-    "category": "Zebra pərdələr",
+    "category": "Aksesuarlar",
     "room": "Yataq otağı",
     "rating": 4.7,
     "isPopular": true,
@@ -273,8 +272,8 @@
   {
     "id": 14,
     "name": "Double Zebra - Gecə/Gündüz",
-    "category": "Zebra pərdələr",
-    "room": "Eyvan",
+    "category": "Günəşliklər",
+    "room": "Mətbəx",
     "rating": 4.6,
     "isPopular": false,
     "isDiscount": true,
@@ -289,26 +288,6 @@
     "sizeOptions": [
       { "size": "150x180", "price": 75.00, "oldPrice": 100.00 }
     ]
-  },
-  {
-    "id": 15,
-    "name": "Məxmər Fonluq - Şərab Rəngi",
-    "category": "Fonluqlar",
-    "room": "Qonaq otağı",
-    "rating": 5.0,
-    "isPopular": true,
-    "isDiscount": true,
-    "description": "Kral üslubunda qalın və yumşaq məxmər fonluq. İstilik izolyasiyasına kömək edir.",
-    "colors": [
-      { "name": "Bordo", "code": "#800000", "mainImage": "https://images.unsplash.com/photo-1594191370213-91b7d5598696" },
-      { "name": "Qırmızı", "code": "#FF0000", "mainImage": "https://images.unsplash.com/photo-1513694203232-719a280e022f" },
-      { "name": "Bənövşəyi", "code": "#4B0082", "mainImage": "https://images.unsplash.com/photo-1513519245088-0e12902e35ca" },
-      { "name": "Tünd Yaşıl", "code": "#006400", "mainImage": "https://images.unsplash.com/photo-1497366216548-37526070297c" },
-      { "name": "Qızılı", "code": "#D4AF37", "mainImage": "https://images.unsplash.com/photo-1620807534720-3775b9b1e93f" }
-    ],
-    "sizeOptions": [
-      { "size": "200x270", "price": 140.00, "oldPrice": 190.00 },
-      { "size": "250x270", "price": 175.00, "oldPrice": 230.00 }
-    ]
   }
 ]
+  

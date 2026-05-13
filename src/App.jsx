@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import Navbar from './pages/Navbar';
 import Footer from './pages/Footer';
 import Shop from './pages/Shop';
-import ProductDetailPage from './pages/ProductDetailPage';
+import ProductDetailPage from './components/ProductDetailPage';
 import HomePage from './pages/HomePage';
 import BasketAndFavorite from './pages/BasketAndFavorite';
 import { CartProvider, useCart } from './components/CartContest';

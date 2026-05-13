@@ -1,66 +1,78 @@
-import { useState } from 'react';
-import Hero from './Hero';
-import Shop from './Shop'; 
-import ReviewsCarousel from './ReviewsCarousel';
-import About from './About';
-import Openingpage from '../components/Openingpage'; // Sildiyin hissəni bərpa etdik
-import LeadModal from '../components/LeadModal';
-import Pagination from '../components/Pagination';
-import PromoSlider from './PromoSlider';
+import { useState } from "react";
+import Hero from "./Hero";
+import Shop from "./Shop";
+import PromoSlider from "./PromoSlider";
+import About from "./About"; // About komponenti
+import ReviewsCarousel from "./ReviewsCarousel"; // Reviews komponenti
+import LeadModal from "../components/LeadModal";
+import { submitLead } from "../utils/services";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
-  
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filteredProducts] = useState([]); 
-  const productsPerPage = 8;
+  const [backendErrors, setBackendErrors] = useState({});
 
-  const handleConfirm = (data: any) => {
-    setIsSuccess(true);
-    setTimeout(() => {
-      setIsModalOpen(false);
-      setIsSuccess(false);
-    }, 2500);
+  const openLeadModal = (type) => {
+    setBackendErrors({});
+    setModalType(type);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirm = async (formData) => {
+    try {
+      const data = new FormData();
+      data.append("phone", formData.phone);
+      data.append("source", modalType);
+      if (formData.fullName) data.append("fullName", formData.fullName);
+      if (formData.image) data.append("image", formData.image);
+
+      await submitLead(data);
+
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsModalOpen(false);
+        setIsSuccess(false);
+      }, 2500);
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setBackendErrors(error.response.data);
+      }
+    }
   };
 
   return (
-    <Openingpage> {/* Animasiya burada başlayır */}
-      <div className="relative min-h-screen flex flex-col bg-white">
-        <main>
-          <Hero onLeadModal={() => setIsModalOpen(true)} />
-          
-          <div id="promos" className="scroll-mt-20"> 
-            <PromoSlider onOpenLeadModal={() => setIsModalOpen(true)} />
-          </div>
+    <div className="relative bg-white overflow-x-hidden">
+      {/* 1. Hero Bölməsi */}
+      <Hero />
 
-          <div id="products">
-            <Shop />
-          </div>
-
-          <div className="container mx-auto px-4 py-10">
-             <Pagination 
-                totalPages={Math.ceil(filteredProducts.length / productsPerPage) || 1} 
-                currentPage={currentPage} 
-                onPageChange={(page) => setCurrentPage(page)} 
-              />
-          </div>
-
-          <ReviewsCarousel />
-          
-          <div id="about">
-            <About />
-          </div>
-        </main>
-
-        <LeadModal 
-          isOpen={isModalOpen} 
-          onClose={() => setIsModalOpen(false)} 
-          onConfirm={handleConfirm}
-          isSuccess={isSuccess}
-        />
+      <div id="promos">
+        <PromoSlider onOpenLeadModal={openLeadModal} />
       </div>
-    </Openingpage>
+
+      {/* ID-ləri bura əlavə edirik */}
+      <div id="about">
+        <About />
+      </div>
+
+      <div id="shop">
+        <Shop />
+      </div>
+
+      <div id="testimonials">
+        <ReviewsCarousel />
+      </div>
+
+      {/* Lead Modal - Bütün çağırışlar üçün tək modal */}
+      <LeadModal
+        isOpen={isModalOpen}
+        type={modalType}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirm}
+        isSuccess={isSuccess}
+        errors={backendErrors}
+      />
+    </div>
   );
 };
 

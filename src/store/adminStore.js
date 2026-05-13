@@ -1,77 +1,56 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import productsData from './productData.json';
+import { create } from "zustand";
+import { createProductApi, extractList, getAllProducts, normalizeProduct } from "../utils/services";
 
-const useAdminStore = create(
-  persist(
-    (set) => ({
-      activeTab: 'dashboard',
-      activeFilter: 'ALL',
-      adminUser: { name: 'Properde Admin', role: 'Baş Administrator' },
-      // Başlanğıcda JSON-dan yükləyirik, lakin persist bunu yaddaşdakı ilə əvəzləyəcək
-      products: productsData, 
-      editingProduct: null,
-      deletingProductId: null,
+const useAdminStore = create((set) => ({
+  products: [],
+  loading: false,
+  error: null,
+  activeTab: "dashboard",
+  activeFilter: "ALL",
+  editingProduct: null,
+  deletingProductId: null,
+  adminUser: { name: "Properde Admin", role: "Baş Administrator" },
 
-      setActiveTab: (tab) => set({ activeTab: tab }),
-      setActiveFilter: (filter) => set({ activeFilter: filter }),
-      openEditModal: (product) => set({ editingProduct: product }),
-      closeEditModal: () => set({ editingProduct: null }),
-      openDeleteConfirm: (id) => set({ deletingProductId: id }),
-      closeDeleteConfirm: () => set({ deletingProductId: null }),
+  setActiveTab: (tab) => set({ activeTab: tab }),
+  setActiveFilter: (filter) => set({ activeFilter: filter }),
+  checkAndReset: () => {},
 
-      deleteProduct: (id) =>
-        set((state) => ({
-          products: state.products.filter((p) => p.id !== id),
-        })),
-
-      addProduct: (product) =>
-        set((state) => {
-          const mainPrice = product.sizeOptions?.[0]?.price || product.price || 0;
-          const oldPrice = product.sizeOptions?.[0]?.oldPrice || product.oldPrice || null;
-          
-          const newProduct = { 
-            ...product, 
-            id: crypto.randomUUID(), // Saniyədə minlərlə unikal ID yaradır
-            price: Number(mainPrice),
-            oldPrice: oldPrice ? Number(oldPrice) : null,
-            createdAt: new Date().toISOString() 
-          };
-
-          return {
-            products: [newProduct, ...state.products]
-          };
-        }),
-
-      updateProduct: (updatedProduct) =>
-        set((state) => {
-          const mainPrice = updatedProduct.sizeOptions?.[0]?.price || updatedProduct.price || 0;
-          const oldPrice = updatedProduct.sizeOptions?.[0]?.oldPrice || updatedProduct.oldPrice || null;
-          
-          return {
-            products: state.products.map((p) => 
-              p.id === updatedProduct.id 
-                ? { ...updatedProduct, price: Number(mainPrice), oldPrice: oldPrice ? Number(oldPrice) : null } 
-                : p
-            ),
-            editingProduct: null
-          };
-        }),
-    }),
-    {
-      name: 'properde-system-v1',
-      // Datanın tamlığını təmin etmək üçün
-      partialize: (state) => ({
-        products: state.products,
-        activeTab: state.activeTab,
-        activeFilter: state.activeFilter
-      }),
-      // LocalStorage-dan yüklənərkən xətaların qarşısını alır
-      onRehydrateStorage: () => (state) => {
-        console.log('Sistem datası bərpa olundu');
-      }
+  addProduct: async (productData) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await createProductApi(productData);
+      set((state) => ({
+        products: [normalizeProduct(response.data), ...state.products],
+        loading: false,
+      }));
+      return true;
+    } catch (error) {
+      set({
+        error: "Əlavə etmə zamanı xəta: " + (error.response?.data?.message || error.message),
+        loading: false,
+      });
+      console.error("Product add error:", error.response?.data || error);
+      return false;
     }
-  )
-);
+  },
+
+  fetchProducts: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await getAllProducts(0, 500);
+      set({ products: extractList(response.data).map(normalizeProduct), loading: false });
+    } catch (error) {
+      set({
+        error: "Məhsulları yükləyərkən xəta: " + (error.response?.data?.message || error.message),
+        loading: false,
+      });
+    }
+  },
+
+  openEditModal: (product) => set({ editingProduct: product }),
+  closeEditModal: () => set({ editingProduct: null }),
+  openDeleteConfirm: (id) => set({ deletingProductId: id }),
+  closeDeleteConfirm: () => set({ deletingProductId: null }),
+}));
 
 export default useAdminStore;

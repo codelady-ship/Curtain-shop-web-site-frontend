@@ -1,5 +1,4 @@
 import React from 'react';
-
 // Şəkillərin importu
 import dest1 from '../assets/dest/dest1.jpg';
 import dest2 from '../assets/dest/dest2.jpg';

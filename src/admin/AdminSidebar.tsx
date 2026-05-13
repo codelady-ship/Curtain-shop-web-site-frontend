@@ -6,7 +6,6 @@ const AdminSidebar = () => {
 
   const menuItems = [
     { id: 'dashboard', name: 'Admin Panel', icon: <LayoutDashboard size={20}/> },
-    { id: 'orders', name: 'Sifarişlər', icon: <ShoppingCart size={20}/> },
     { id: 'visitors', name: 'Müraciətlər', icon: <UsersIcon size ={20}/>},
     { id: 'all-models', name: 'Bütün Modellər', icon: <Layers size={20}/> },
     { id: 'add-model', name: 'Model Əlavə Et', icon: <PlusCircle size={20}/> },

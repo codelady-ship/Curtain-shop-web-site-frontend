@@ -170,11 +170,10 @@ const ProductCard = ({
               e.stopPropagation();
               toggleWishlist(item.id);
             }}
-            className={`p-4 border rounded-2xl transition-all ${
-              isFavorite
+            className={`p-4 border rounded-2xl transition-all ${isFavorite
                 ? "bg-red-50 text-red-500 border-red-200"
                 : "text-gray-400 border-gray-100"
-            }`}
+              }`}
           >
             <Heart size={20} className={isFavorite ? "fill-current" : ""} />
           </button>

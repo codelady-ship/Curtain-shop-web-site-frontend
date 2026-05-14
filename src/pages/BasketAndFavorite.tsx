@@ -256,7 +256,12 @@ const BasketAndFavorite = () => {
                                   sm
                                 </p>
                               </div>
-
+                              <button
+                                onClick={() => navigate(`/product/${item.id}`)}
+                                className="text-[9px] font-black text-[#C5A059] uppercase tracking-tighter hover:underline block pt-1"
+                              >
+                                Detala bax
+                              </button>
                               <div className="flex items-center bg-gray-50 w-fit rounded-xl px-2 py-1 border border-gray-100">
                                 <button
                                   onClick={() =>

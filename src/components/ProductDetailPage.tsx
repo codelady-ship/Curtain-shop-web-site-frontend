@@ -220,7 +220,7 @@ const ProductDetailPage = () => {
             <ChevronRight size={12} className="text-gray-700" />
 
             <span
-onClick={() => navigate(`/products?category=${encodeURIComponent(product.category)}`)}
+              onClick={() => navigate(`/products?category=${encodeURIComponent(product.category)}`)}
               className="cursor-pointer hover:text-[#C5A059]"
             >
               {product.category}
@@ -297,11 +297,10 @@ onClick={() => navigate(`/products?category=${encodeURIComponent(product.categor
                         setActiveImage(img);
                         setImageLoaded(false);
                       }}
-                      className={`relative w-20 h-28 rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${
-                        activeImage === img
+                      className={`relative w-20 h-28 rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${activeImage === img
                           ? "border-[#C5A059] scale-105"
                           : "border-gray-100"
-                      }`}
+                        }`}
                     >
                       <img
                         src={img}
@@ -374,11 +373,10 @@ onClick={() => navigate(`/products?category=${encodeURIComponent(product.categor
                     <button
                       key={i}
                       onClick={() => setSelectedSize(s)}
-                      className={`px-6 py-3 border-2 rounded-2xl font-black text-xs transition-all ${
-                        selectedSize?.size === s.size
+                      className={`px-6 py-3 border-2 rounded-2xl font-black text-xs transition-all ${selectedSize?.size === s.size
                           ? "bg-black border-black text-white shadow-xl"
                           : "bg-white border-gray-100 text-gray-400"
-                      }`}
+                        }`}
                     >
                       {s.size}
                     </button>
@@ -405,11 +403,10 @@ onClick={() => navigate(`/products?category=${encodeURIComponent(product.categor
                         );
                         setImageLoaded(false);
                       }}
-                      className={`w-10 h-10 rounded-full border-4 p-0.5 transition-all ${
-                        selectedColor?.name === c.name
+                      className={`w-10 h-10 rounded-full border-4 p-0.5 transition-all ${selectedColor?.name === c.name
                           ? "border-[#C5A059] scale-110"
                           : "border-white"
-                      }`}
+                        }`}
                     >
                       <div
                         className="w-full h-full rounded-full"
@@ -474,11 +471,10 @@ onClick={() => navigate(`/products?category=${encodeURIComponent(product.categor
                   <button
                     key={i}
                     onClick={() => setPage(i)}
-                    className={`transition-all duration-500 ${
-                      page === i
+                    className={`transition-all duration-500 ${page === i
                         ? "w-10 h-3 bg-black rounded-full"
                         : "w-3 h-3 bg-gray-200 rounded-full hover:bg-gray-400"
-                    }`}
+                      }`}
                   />
                 ))}
               </div>

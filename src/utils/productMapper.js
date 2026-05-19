@@ -1,5 +1,7 @@
 import api from "./api.js";
 
+const BACKEND_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN || "";
+
 export const getAllProducts = (page = 0, size = 10) => {
   return api.get("/products/all", {
     params: { page, size },
@@ -14,16 +16,28 @@ export const deleteProductApi = (id) => api.delete(`/products/${id}`);
 
 export const updateProductApi = (id, productData) => api.put(`/products/${id}`, productData);
 
-export const createProductApi = (productData) => api.post("/products", productData);
+export const createProductApi = (productData = {}) => {
+  const imageFile = productData.imageFile || productData.primaryImageFile;
+  const hasImageFile = typeof File !== "undefined" && imageFile instanceof File;
+
+  const { imageFile: _imageFile, primaryImageFile: _primaryImageFile, ...payload } = productData;
+
+  if (hasImageFile) {
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    formData.append("product", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+    return api.post("/products/upload", formData);
+  }
+
+  return api.post("/products", payload);
+};
 
 export const createProductWithImage = (productData, imageFile) => {
   const formData = new FormData();
   formData.append("image", imageFile);
   formData.append("product", new Blob([JSON.stringify(productData)], { type: "application/json" }));
 
-  return api.post("/products/upload", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  return api.post("/products/upload", formData);
 };
 
 export const fetchFilteredProductsApi = (params = {}) => {
@@ -44,38 +58,49 @@ export const trackSiteVisit = () => api.post("/analytics/hit");
 export const getDashboardData = () => api.get("/analytics/dashboard");
 
 export const submitLead = (data = {}) => {
-  if (data.image instanceof File) {
+  if (data instanceof FormData) {
+    return api.post("/leads/submit", data);
+  }
+
+  const hasImageFile = typeof File !== "undefined" && data?.image instanceof File;
+  if (hasImageFile) {
     const formData = new FormData();
     const { image, ...payload } = data;
     formData.append("data", new Blob([JSON.stringify(payload)], { type: "application/json" }));
     formData.append("image", image);
-    return api.post("/leads/submit", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    return api.post("/leads/submit", formData);
   }
+
   return api.post("/leads/submit", data);
 };
 
 export const getLeads = (params = {}) => api.get("/leads", { params });
 export const updateLeadStatus = (id, status) => api.patch(`/leads/${id}/status`, null, { params: { status } });
 export const updateLeadContacted = (id, contacted) => api.patch(`/leads/${id}/contacted`, null, { params: { contacted } });
-export const updateLeadPromo = (id, promoCode) => api.patch(`/leads/${id}/promo`, null, { params: { promoCode } });
+export const updateLeadPromo = (id, promoCode, message) => api.patch(`/leads/${id}/promo`, { promoCode, message });
 export const getLeadsBySource = (source) => api.get("/leads", { params: { source } });
 
-const BACKEND_URL = "http://localhost:8080";
-
 export const getImageUrl = (image) => {
-  if (!image) return "";
-  if (typeof image !== "string") return "";
+  if (!image || typeof image !== "string") return "";
+
+  const trimmed = image.trim();
+  if (!trimmed) return "";
+
   if (
-    image.startsWith("http://") ||
-    image.startsWith("https://") ||
-    image.startsWith("data:") ||
-    image.startsWith("blob:")
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("data:") ||
+    trimmed.startsWith("blob:")
   ) {
-    return image;
+    return trimmed;
   }
-  return `${BACKEND_URL}${image.startsWith("/") ? image : `/${image}`}`;
+
+  const withoutLeadingSlash = trimmed.replace(/^\/+/, "");
+  const normalizedPath = withoutLeadingSlash.startsWith("uploads/")
+    ? `/${withoutLeadingSlash}`
+    : `/uploads/${withoutLeadingSlash}`;
+
+  return `${BACKEND_ORIGIN}${normalizedPath}`;
 };
 
 const firstValue = (...values) => values.find((value) => value !== undefined && value !== null && value !== "");
@@ -90,8 +115,10 @@ export const extractList = (data) => {
   if (Array.isArray(data)) return data;
   if (Array.isArray(data?.content)) return data.content;
   if (Array.isArray(data?.data)) return data.data;
+  if (Array.isArray(data?.data?.content)) return data.data.content;
   if (Array.isArray(data?.products)) return data.products;
   if (Array.isArray(data?.items)) return data.items;
+  if (Array.isArray(data?.result)) return data.result;
   return [];
 };
 
@@ -136,7 +163,7 @@ export const normalizeProduct = (product = {}) => {
       colorCode: firstValue(color.colorCode, color.code, color.hex, color.colorHex, "#cccccc"),
       mainImage: getImageUrl(colorImage),
       imageUrl: getImageUrl(colorImage),
-      images: Array.isArray(color.images) ? color.images.map((img) => getImageUrl(img)) : colorImage ? [getImageUrl(colorImage)] : [],
+      images: Array.isArray(color.images) ? color.images.map((img) => getImageUrl(img)).filter(Boolean) : colorImage ? [getImageUrl(colorImage)] : [],
     };
   });
 
@@ -158,6 +185,7 @@ export const normalizeProduct = (product = {}) => {
     category: firstValue(product.category, product.categoryType, product.categoryName, ""),
     room: firstValue(product.room, product.roomType, ""),
     partType: firstValue(product.partType, product.fabric, ""),
+    status: firstValue(product.status, product.productStatus, product.isDiscount ? "Endirimli" : product.isPopular ? "Popular" : "Standart"),
     rating: toNumber(product.rating, 5),
     price,
     oldPrice,

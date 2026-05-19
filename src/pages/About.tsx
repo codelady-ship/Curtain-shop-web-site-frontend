@@ -1,201 +1,201 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Award, Ruler, PenTool, Truck, ShieldCheck, RefreshCcw } from 'lucide-react';
+import { Quote, Phone, Mail, Clock } from 'lucide-react';
 
-// Şəkilləri assets qovluğundan import edirik
-import img1 from '../assets/about/perde1.jpg'; 
-import img2 from '../assets/about/perde2.jpg';
-import img3 from '../assets/about/perde3.jpg';
-import img4 from '../assets/about/perde4.jpg';
+// Şəkillərin importu
+import teamMainImg from '../assets/about/team-main.jpg';
+import mudirImg from '../assets/about/mudir.jpg';
 
-const About = () => {
+const About: React.FC = () => {
   const goldColor = '#C5A059';
-  const [currentImg, setCurrentImg] = useState(0);
 
-  const images = [img1, img2, img3, img4];
+  // Avtomatik növbə ilə dəyişən 2 şəkil
+  const images = [teamMainImg, mudirImg];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const features = [
-    { 
-      title: "Premium Parçalar", 
-      desc: "Dünyanın ən yaxşı tekstil fabriklərindən seçilmiş eksklüziv kolleksiya.",
-      icon: <Award size={28} /> 
-    },
-    { 
-      title: "Ödənişsiz Ölçü", 
-      desc: "Peşəkar ustalarımız tərəfindən yerində dəqiq ölçü və məsləhət xidməti.",
-      icon: <Ruler size={28} /> 
-    },
-    { 
-      title: "Vizualizasiya", 
-      desc: "Seçdiyiniz pərdələrin otağınızda necə görünəcəyini 3D formatda görün.",
-      icon: <PenTool size={28} /> 
-    },
-    { 
-      title: "Sürətli Çatdırılma", 
-      desc: "Sifarişiniz 2-4 iş günü ərzində tam hazır və quraşdırılmış şəkildə təhvil verilir.",
-      icon: <Truck size={28} /> 
-    }
-  ];
-
+  // 4 saniyədən bir şəkilləri dəyişən timer
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImg((prev) => (prev + 1) % images.length);
-    }, 5000);
-    return () => clearInterval(timer);
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(interval);
   }, [images.length]);
 
   return (
     <section id="haqqimizda" className="py-24 bg-white overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row items-center gap-16">
-          
-          {/* SOL TƏRƏF: Şəkil və Çərçivə Hissəsi */}
-          <div className="w-full lg:w-5/12 flex justify-center items-center">
-            <div className="relative inline-block"> {/* Şəklin ölçüsünə görə daralan konteyner */}
-              
-              {/* Arxa fon Dekorasiyası - Üst Sol (Şəkildən kənara çıxması üçün mənfi dəyərlərlə) */}
-              <motion.div 
-                animate={{ x: [0, -5, 0], y: [0, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-4 -left-4 w-24 h-24 border-l-[4px] border-t-[4px] rounded-tl-2xl z-0"
+        <div className="flex flex-col lg:flex-row items-start gap-16 lg:gap-24">
+
+          {/* SOL TƏRƏF: Animasiyalı Foto Çərçivəsi və ALTINDA ƏLAQƏ HİSSƏSİ */}
+          <div className="w-full lg:w-6/12 flex flex-col items-center">
+
+            {/* Foto Çərçivə Konteyneri */}
+            <div className="relative inline-block w-full max-w-[640px] mb-8">
+
+              {/* Üst Sol Animasiyalı Qızılı Künc */}
+              <motion.div
+                animate={{ x: [0, -4, 0], y: [0, -4, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-5 -left-5 w-24 h-24 border-l-[3px] border-t-[3px] rounded-tl-3xl z-0"
                 style={{ borderColor: goldColor }}
               />
 
-              {/* Arxa fon Dekorasiyası - Alt Sağ */}
-              <motion.div 
-                animate={{ x: [0, 5, 0], y: [0, 5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute -bottom-4 -right-4 w-24 h-24 border-r-[4px] border-b-[4px] rounded-br-2xl z-0"
+              {/* Alt Sağ Animasiyalı Qızılı Künc */}
+              <motion.div
+                animate={{ x: [0, 4, 0], y: [0, 4, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                className="absolute -bottom-5 -right-5 w-24 h-24 border-r-[3px] border-b-[3px] rounded-br-3xl z-0"
                 style={{ borderColor: goldColor }}
               />
 
-              {/* Əsas Şəkil Konteyneri */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
+              {/* Əsas Foto */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.97 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="relative z-10 w-[320px] md:w-[380px] lg:w-[400px] rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] border-[8px] border-white bg-white"
+                className="relative z-10 w-full rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.06)] border-[8px] border-white bg-white"
               >
-                <div className="relative w-full aspect-[4/5] overflow-hidden">
+                <div className="relative w-full aspect-[16/10] overflow-hidden bg-slate-50">
                   <AnimatePresence mode="wait">
                     <motion.img
-                      key={currentImg}
-                      src={images[currentImg]}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.8 }}
-                      className="w-full h-full object-cover"
-                      alt="Properde"
+                      key={currentImageIndex}
+                      src={images[currentImageIndex]}
+                      initial={{ opacity: 0, filter: "blur(6px)" }}
+                      animate={{ opacity: 1, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, filter: "blur(6px)" }}
+                      transition={{ duration: 0.7, ease: "easeInOut" }}
+                      loading="lazy"
+                      className="w-full h-full object-cover object-center"
+                      alt="Properde Komandası"
                     />
                   </AnimatePresence>
-                  <div className="absolute inset-0 bg-black/5" />
-                </div>
-                
-                {/* Karusel indikatorları */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-                  {images.map((_, i) => (
-                    <div key={i} className={`h-1 transition-all duration-500 rounded-full ${currentImg === i ? 'w-8 bg-white' : 'w-1.5 bg-white/40'}`} />
-                  ))}
+                  <div className="absolute inset-0 bg-black/[0.01]" />
                 </div>
               </motion.div>
             </div>
+
+            {/* FOTONUN TAM ALTINDAKI Premium Əlaqə Paneli */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="w-full max-w-[640px] p-6 bg-slate-50/80 rounded-2xl border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6"
+            >
+              <div className="space-y-4 w-full sm:w-auto">
+                {/* WhatsApp Linki */}
+                <a
+                  href="https://wa.me/994992900055"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3.5 group cursor-pointer"
+                >
+                  <div className="p-2.5 rounded-full bg-white text-slate-600 transition-colors group-hover:bg-green-50 group-hover:text-green-600 shadow-xs border border-slate-100">
+                    <Phone size={18} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Müştəri Xidməti (WhatsApp)</p>
+                    <p className="text-base font-serif font-bold text-slate-800 transition-colors group-hover:text-[#C5A059]">
+                      +994 (99) 290 00 55
+                    </p>
+                  </div>
+                </a>
+
+                {/* Email Linki */}
+                <a
+                  href="mailto:contact@properde.az"
+                  className="flex items-center gap-3.5 group cursor-pointer"
+                >
+                  <div className="p-2.5 rounded-full bg-white text-slate-600 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600 shadow-xs border border-slate-100">
+                    <Mail size={18} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Rəsmi E-poçt Ünvanı</p>
+                    <p className="text-base font-serif font-bold text-slate-800 transition-colors group-hover:text-[#C5A059]">
+                      contact@properde.az
+                    </p>
+                  </div>
+                </a>
+              </div>
+
+              {/* İş Saatları Bloku */}
+              <div className="flex items-center gap-3.5 pt-4 sm:pt-0 sm:border-l border-gray-200 sm:pl-6 w-full sm:w-auto">
+                <div className="p-2.5 rounded-full bg-white text-slate-600 shadow-xs border border-slate-100">
+                  <Clock size={18} style={{ color: goldColor }} />
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">İş Saatlarımız</p>
+                  <p className="text-sm font-bold text-slate-800">Hər gün: 09:00 - 18:00</p>
+                </div>
+              </div>
+            </motion.div>
+
           </div>
 
-          {/* SAĞ TƏRƏF: Kontent */}
-          <div className="w-full lg:w-7/12 space-y-6">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          {/* SAĞ TƏRƏF: Mətnlər və İş Bölgüsü */}
+          <div className="w-full lg:w-6/12 space-y-10 lg:pt-2">
+
+            {/* Başlıq və Haqqımızda fəlsəfəsi */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               <div className="flex items-center gap-4 mb-2">
                 <div className="h-[1px] w-12 bg-gray-300"></div>
                 <span style={{ color: goldColor }} className="text-sm uppercase tracking-[0.5em] font-bold">Haqqımızda</span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-serif text-slate-900 leading-[1.1] mb-3">
-                Pəncərəniz üçün <br />
-                <span className="italic font-light">Eleqant</span> Həllər
+              <h2 className="text-4xl md:text-5xl font-serif text-slate-900 leading-[1.15] mb-4">
+                Xəyallarınızı Pəncərənizə <br />
+                <span className="italic font-light text-slate-800">Köçürən Komanda</span>
               </h2>
               <p className="text-slate-600 text-base md:text-lg leading-relaxed font-light border-l-2 pl-6" style={{ borderColor: goldColor }}>
-                Biz sadəcə pərdə satmırıq, biz məkanınızın ruhunu dəyişən zəriflik yaradırıq. 
-                <strong className="text-slate-900 font-medium"> 1978-ci ildən</strong> bəri sənətkarlıqla texnologiyanı birləşdirərək premium toxunuş bəxş edirik.
+                Hər bir pərdə layihəsinin arxasında sadəcə parçalar deyil, böyük bir sənətkarlıq, sevgi və komanda işi dayanır. Biz, evinizin ruhuna və interyerinə mükəmməl toxunuşu bəxş etmək üçün bütöv bir heyətlə çalışırıq.
               </p>
             </motion.div>
 
-            {/* Özəlliklər */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-              {features.map((item, index) => (
-                <motion.div 
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="group"
-                >
-                  <div className="flex gap-4 p-1">
-                    <div 
-                      className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center border border-gray-100 shadow-sm transition-all group-hover:bg-black group-hover:text-white"
-                      style={{ color: goldColor }}
-                    >
-                      {React.cloneElement(item.icon, { size: 24 })}
-                    </div>
-                    <div>
-                      <h3 className="text-md font-bold text-slate-800 mb-0.5 tracking-tight">{item.title}</h3>
-                      <p className="text-xs text-gray-500 leading-tight">{item.desc}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Zəmanət və İadə Bölməsi */}
-            <div className="pt-6 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <motion.div 
-                whileHover={{ y: -3 }}
-                className="group relative flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden cursor-default transition-all"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/5 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
-                <div className="relative z-10 flex items-start gap-3">
-                  <div className="mt-0.5 p-1.5 rounded-lg bg-white shadow-sm transition-transform group-hover:scale-105">
-                    <ShieldCheck size={20} style={{ color: goldColor }} className="shrink-0" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider group-hover:text-[#C5A059]">Rəsmi Zəmanət</h4>
-                    <p className="text-[10px] text-gray-500 leading-tight mt-0.5">
-                      Bütün mexanizm və parçalarımıza <span className="font-bold text-slate-700">1 il</span> rəsmi zəmanət.
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div 
-                whileHover={{ y: -3 }}
-                className="group relative flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden cursor-default transition-all"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/5 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
-                <div className="relative z-10 flex items-start gap-3">
-                  <div className="mt-0.5 p-1.5 rounded-lg bg-white shadow-sm transition-transform group-hover:scale-105">
-                    <RefreshCcw size={20} style={{ color: goldColor }} className="shrink-0" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider group-hover:text-[#C5A059]">İadə Şərtləri</h4>
-                    <p className="text-[10px] text-gray-500 leading-tight mt-0.5">
-                      İstehsal xətası zamanı <span className="font-bold text-slate-700">14 gün</span> ərzində yenilənmə.
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Əlaqə */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Rəhbərlikdən Səmimi Mesaj */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="flex gap-4 p-5 bg-slate-50/70 rounded-2xl border border-slate-100/80 transition-all hover:bg-white hover:shadow-md"
+            >
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-white shadow-sm" style={{ color: goldColor }}>
+                <Quote size={24} />
+              </div>
               <div>
-                <p className="text-[9px] uppercase tracking-widest text-gray-400 font-bold">Müştəri Xidməti</p>
-                <p className="text-lg font-serif font-bold text-slate-800 transition-colors hover:text-[#C5A059] cursor-pointer">
-                  +994 (99) 290 00 55
+                <h3 className="text-sm font-bold text-slate-800 tracking-tight">Rəhbərlikdən Səmimi Mesaj</h3>
+                <p className="text-xs text-gray-500 font-light leading-relaxed mt-0.5">
+                  "Bizim üçün ən böyük qazanc, işimizi bitirdikdən sonra müştərimizin üzündəki o səmimi məmnuniyyəti görməkdir." Hər bir müraciəti fərdi olaraq analiz edir, hər bir evə xüsusi bir konsept qururuq.
                 </p>
               </div>
-            </div>
-          </div>
+            </motion.div>
 
+            {/* Peşəkar İş Bölgüsü mərhələləri */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-[1px] w-8 bg-gray-300"></div>
+                <h3 className="text-lg font-serif font-bold text-slate-900 tracking-tight">Peşəkar İş Bölgümüz</h3>
+              </div>
+
+              <div className="space-y-3">
+                <div className="p-3.5 rounded-lg bg-slate-50/60 border border-slate-100 transition-colors hover:bg-slate-100/50">
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-0.5">Dizayn və Konsultasiya</h4>
+                  <p className="text-xs text-gray-500 font-light leading-relaxed">Evinizin interyerinə və işıq bucağına uyğun ən doğru model seçimində sizə yol göstərən komandamız.</p>
+                </div>
+
+                <div className="p-3.5 rounded-lg bg-slate-50/60 border border-slate-100 transition-colors hover:bg-slate-100/50">
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-0.5">Dərzi və İstehsalat</h4>
+                  <p className="text-xs text-gray-500 font-light leading-relaxed">Premium parçaları milimetrik dəqiqliklə, gizli tikiş texnologiyası ilə sənət əsərinə çevirən ustalarımız.</p>
+                </div>
+
+                <div className="p-3.5 rounded-lg bg-slate-50/60 border border-slate-100 transition-colors hover:bg-slate-100/50">
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-0.5">Peşəkar Quraşdırılma</h4>
+                  <p className="text-xs text-gray-500 font-light leading-relaxed">Pərdələrinizin məkanda tam ideal və düzgün dayanmasını təmin edən, təmiz işləyən montaj heyətimiz.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>

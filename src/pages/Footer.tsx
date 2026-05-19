@@ -22,9 +22,9 @@ const Footer = () => {
 
   return (
     <footer className="bg-black text-white pt-20 pb-10 border-t border-zinc-900 relative" id="footer">
-      
+
       {/* Yuxarı qalx düyməsi */}
-      <button 
+      <button
         onClick={scrollToTop}
         className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-black border border-zinc-800 rounded-full flex items-center justify-center hover:border-[#C5A059] transition-all group shadow-2xl z-20"
       >
@@ -33,7 +33,7 @@ const Footer = () => {
 
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-          
+
           {/* Sosial */}
           <div className="flex flex-col items-center sm:items-start space-y-6">
             <h2 className="text-sm font-serif font-bold tracking-[0.2em] uppercase">
@@ -41,16 +41,16 @@ const Footer = () => {
             </h2>
             <div className="flex gap-4">
               {[
-                { icon: <Instagram size={18} />, link: "https://instagram.com/senin_username" },
-                { icon: <Facebook size={18} />, link: "https://facebook.com/senin_page" },
-                { icon: <Music2 size={18} />, link: "https://tiktok.com/@senin_username" }
+                { icon: <Instagram size={18} />, link: "https://www.instagram.com/pro.perde?igsh=NmEyY3loMXhra2Zv&utm_source=qr" },
+                { icon: <Facebook size={18} />, link: "https://www.facebook.com/share/1DzVFVwJpN/?mibextid=wwXIfr" },
+                { icon: <Music2 size={18} />, link: "https://www.tiktok.com/@properde.az?_r=1&_t=ZS-96LwM7fK2lD" }
               ].map((social, idx) => (
-                <a 
+                <a
                   key={idx}
-                  href={social.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:border-[#C5A059] transition-all" 
+                  href={social.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:border-[#C5A059] transition-all"
                   style={{ color: goldColor }}
                 >
                   {social.icon}
@@ -65,10 +65,10 @@ const Footer = () => {
               Məlumat
             </h4>
             <ul className="space-y-4 text-sm text-zinc-400 font-medium text-center sm:text-left">
-            <li><button onClick={() => scrollToSection('haqqimizda')} className="hover:text-white">Haqqımızda</button></li>
-            <li><button onClick={() => scrollToSection('promos')} className="hover:text-white transition-colors">Kampaniyalar</button></li>              
-            <li><button onClick={() => scrollToSection('haqqimizda')} className="hover:text-white">Zəmanət</button></li>
-            <li><button onClick={() => scrollToSection('haqqimizda')} className="hover:text-white">İadə qaydaları</button></li>
+              <li><button onClick={() => scrollToSection('haqqimizda')} className="hover:text-white">Haqqımızda</button></li>
+              <li><button onClick={() => scrollToSection('promos')} className="hover:text-white transition-colors">Kampaniyalar</button></li>
+              <li><button onClick={() => scrollToSection('haqqimizda')} className="hover:text-white">Zəmanət</button></li>
+              <li><button onClick={() => scrollToSection('haqqimizda')} className="hover:text-white">İadə qaydaları</button></li>
             </ul>
           </div>
 
@@ -78,12 +78,12 @@ const Footer = () => {
               Kataloq
             </h4>
             <ul className="space-y-4 text-sm text-zinc-400 font-medium text-center sm:text-left">
-              <li><button onClick={() => scrollToSection('products')} className="hover:text-white">Dəst pərdələr</button></li>
-              <li><button onClick={() => scrollToSection('products')} className="hover:text-white">Günəşliklər</button></li>
-              <li><button onClick={() => scrollToSection('products')} className="hover:text-white">Tüllər</button></li>
-              <li><button onClick={() => scrollToSection('products')} className="hover:text-white">Jalüzlər</button></li>
-              <li><button onClick={() => scrollToSection('products')} className="hover:text-white">Aksesuarlar</button></li>
-              <li><button onClick={() => scrollToSection('products')} className="hover:text-white">Kornizlər</button></li>
+              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Dəst pərdələr</button></li>
+              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Günəşliklər</button></li>
+              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Tüllər</button></li>
+              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Jalüzlər</button></li>
+              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Aksesuarlar</button></li>
+              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Kornizlər</button></li>
             </ul>
           </div>
 
@@ -93,11 +93,11 @@ const Footer = () => {
               Əlaqə
             </h4>
             <ul className="space-y-5 text-[13px] text-zinc-400">
-              
+
               {/* MAP */}
               <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3 group">
                 <MapPin size={18} style={{ color: goldColor }} />
-                <a 
+                <a
                   href="https://www.google.com/maps?q=Bakı+Nizami+rayonu+B.Nuriyev+322"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -110,7 +110,7 @@ const Footer = () => {
               {/* WHATSAPP */}
               <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3 group">
                 <Phone size={18} style={{ color: goldColor }} />
-                <a 
+                <a
                   href="https://wa.me/994992900055?text=Salam%20məhsullar%20haqqında%20məlumat%20almaq%20istəyirəm"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -123,8 +123,8 @@ const Footer = () => {
               {/* EMAIL */}
               <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3 group">
                 <Mail size={18} style={{ color: goldColor }} />
-                <a 
-                  href="mailto:Properde1978@gmail.com" 
+                <a
+                  href="mailto:Properde1978@gmail.com"
                   className="hover:text-white"
                 >
                   Properde1978@gmail.com

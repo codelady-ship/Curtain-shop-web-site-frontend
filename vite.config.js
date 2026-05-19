@@ -1,6 +1,6 @@
-// vite.config.js
-import { defineConfig } from 'vite'; // <--- This is the missing piece!
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -8,10 +8,14 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:8080", // localhost əvəzinə IP yaz
+        target: "http://127.0.0.1:8080",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api') // ehtiyac olsa
+      },
+      "/uploads": {
+        target: "http://127.0.0.1:8080",
+        changeOrigin: true,
+        secure: false,
       },
     },
   },

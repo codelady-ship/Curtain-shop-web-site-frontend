@@ -17,7 +17,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import LeadModal from "../components/LeadModal";
-import { fetchProducts, submitLead } from "../utils/services"; // API funksiyası
+import {
+  buildLeadSelectionPayload,
+  extractList,
+  fetchProducts,
+  getImageUrl,
+  normalizeProduct,
+  resolveWishlistProducts,
+  submitLead,
+} from "../utils/services"; // API funksiyası
 
 const BasketAndFavorite = () => {
   const {
@@ -37,19 +45,14 @@ const BasketAndFavorite = () => {
   useEffect(() => {
     fetchProducts()
       .then((res) => {
-        // Pageable content yoxlaması
-        const data =
-          res.data?.content || (Array.isArray(res.data) ? res.data : []);
-        setDbProducts(data);
+        setDbProducts(extractList(res.data).map(normalizeProduct));
       })
       .catch((err) => console.error("Məhsullar yüklənmədi:", err));
   }, []);
 
   // 2. İstək siyahısını bazadan gələn dataya görə süz
   const wishlistProducts = useMemo(() => {
-    return wishlist
-      .map((id) => dbProducts.find((p) => p.id === id))
-      .filter(Boolean);
+    return resolveWishlistProducts(wishlist, dbProducts);
   }, [wishlist, dbProducts]);
 
   const handleCheckout = () => {
@@ -58,31 +61,21 @@ const BasketAndFavorite = () => {
     }
   };
 
-  const subtotal = cartItems.reduce((acc, item) => {
-    const price = Number(
-      item.selectedSize?.price || item.selectedColor?.price || item.price || 0,
-    );
-    return acc + price * item.quantity;
-  }, 0);
+  const subtotal = useMemo(
+    () => buildLeadSelectionPayload({ cartItems, wishlist, products: dbProducts }).totalAmount,
+    [cartItems, wishlist, dbProducts],
+  );
 
   const handleConfirmOrder = async (data) => {
-    const requestedProducts = cartItems.map((item) => {
-      const size = item.selectedSize?.sizeValue || item.selectedSize?.size || "Standart";
-      const color = item.selectedColor?.colorName || item.selectedColor?.name || "Standart";
-      const price = Number(item.selectedSize?.price || item.price || 0);
-      return `${item.name} | ${color} | ${size} | ${item.quantity} ədəd | ${price} ₼`;
-    });
-
-    const likedProducts = wishlistProducts.map((item: any) => `${item.name} | ID: ${item.id}`);
+    const selectionPayload = buildLeadSelectionPayload({ cartItems, wishlist, products: dbProducts });
 
     await submitLead({
       fullName: data.fullName,
       phone: data.phone,
+      email: data.email,
       source: "ORDER",
       referrer: new URLSearchParams(window.location.search).get("ref") || "WEB",
-      requestedProducts,
-      likedProducts,
-      totalAmount: subtotal,
+      ...selectionPayload,
       image: data.image,
     });
 
@@ -170,7 +163,8 @@ const BasketAndFavorite = () => {
                       >
                         <div className="w-24 h-28 bg-gray-50 rounded-2xl overflow-hidden flex-shrink-0 border border-gray-100">
                           <img
-                            src={product.imageUrl || "/placeholder.jpg"}
+                            src={getImageUrl(product.imageUrl || product.image || "") || "/placeholder.jpg"}
+                            loading="lazy"
                             className="w-full h-full object-cover"
                             alt={product.name}
                           />
@@ -239,7 +233,8 @@ const BasketAndFavorite = () => {
                           >
                             <div className="w-28 h-36 rounded-[1.8rem] overflow-hidden border border-gray-100 flex-shrink-0">
                               <img
-                                src={item.selectedColor?.mainImage || item.selectedColor?.imageUrl || item.imageUrl || item.image || "/placeholder.jpg"}
+                                src={getImageUrl(item.selectedColor?.mainImage || item.selectedColor?.imageUrl || item.imageUrl || item.image || "") || "/placeholder.jpg"}
+                                loading="lazy"
                                 className="w-full h-full object-cover"
                                 alt={item.name}
                               />

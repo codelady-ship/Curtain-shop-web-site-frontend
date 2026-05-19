@@ -25,10 +25,21 @@ const getProductsArray = (data: any) => {
 };
 
 
+const BACKEND_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN || "";
+
 const getImageUrl = (image: string) => {
-  if (!image) return "";
-  if (image.startsWith("http") || image.startsWith("data:") || image.startsWith("blob:")) return image;
-  return `http://localhost:8080${image.startsWith("/") ? image : `/${image}`}`;
+  if (!image || typeof image !== "string") return "";
+
+  const trimmed = image.trim();
+  if (!trimmed) return "";
+  if (trimmed.startsWith("http") || trimmed.startsWith("data:") || trimmed.startsWith("blob:")) return trimmed;
+
+  const withoutLeadingSlash = trimmed.replace(/^\/+/, "");
+  const normalizedPath = withoutLeadingSlash.startsWith("uploads/")
+    ? `/${withoutLeadingSlash}`
+    : `/uploads/${withoutLeadingSlash}`;
+
+  return `${BACKEND_ORIGIN}${normalizedPath}`;
 };
 
 const normalizeProduct = (raw: any) => {
@@ -304,6 +315,7 @@ const ProductDetailPage = () => {
                     >
                       <img
                         src={img}
+                        loading="lazy"
                         className="w-full h-full object-cover"
                         alt="thumb"
                       />

@@ -21,13 +21,13 @@ const HomePage = () => {
 
   const handleConfirm = async (formData) => {
     try {
-      const data = new FormData();
-      data.append("phone", formData.phone);
-      data.append("source", modalType);
-      if (formData.fullName) data.append("fullName", formData.fullName);
-      if (formData.image) data.append("image", formData.image);
-
-      await submitLead(data);
+      await submitLead({
+        phone: formData.phone,
+        fullName: formData.fullName,
+        email: formData.email,
+        source: modalType,
+        image: formData.image,
+      });
 
       setIsSuccess(true);
       setTimeout(() => {
@@ -66,7 +66,7 @@ const HomePage = () => {
       {/* Lead Modal - Bütün çağırışlar üçün tək modal */}
       <LeadModal
         isOpen={isModalOpen}
-        type={modalType}
+        modalType={modalType}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirm}
         isSuccess={isSuccess}

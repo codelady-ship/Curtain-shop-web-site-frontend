@@ -71,6 +71,7 @@ const ProductCard = ({
         {imageSrc ? (
           <img
             src={imageSrc}
+            loading="lazy"
             alt={item.name}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             onError={(e) => {
@@ -171,8 +172,8 @@ const ProductCard = ({
               toggleWishlist(item.id);
             }}
             className={`p-4 border rounded-2xl transition-all ${isFavorite
-                ? "bg-red-50 text-red-500 border-red-200"
-                : "text-gray-400 border-gray-100"
+              ? "bg-red-50 text-red-500 border-red-200"
+              : "text-gray-400 border-gray-100"
               }`}
           >
             <Heart size={20} className={isFavorite ? "fill-current" : ""} />

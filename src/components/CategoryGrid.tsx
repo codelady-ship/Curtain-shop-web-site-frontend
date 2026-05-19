@@ -31,6 +31,7 @@ const categories = [
   { title: "Kornizlər", images: [korniz1, korniz2, korniz3] },
   { title: "Aksesuarlar", images: [aksesuar1, aksesuar2, aksesuar3] },
   { title: "Günəşliklər", images: [guneslik1, guneslik2, guneslik3] },
+  { title: "Pastellər", images: [dest1, tul1, guneslik1] },
 ];
 
 const CategoryGrid = () => {
@@ -42,26 +43,20 @@ const CategoryGrid = () => {
         </h2>
         <div className="h-0.5 w-16 bg-[#C5A059] mx-auto mt-2" />
       </div>
-
-      {/* grid-cols-1: Mobildə alt-alta (1-1-1)
-          sm:grid-cols-2: 640px-dən yuxarı (2-2-2)
-          md:grid-cols-3: 768px-dən yuxarı (3-3)
-          lg:grid-cols-6: 1024px-dən yuxarı (Hamısı yan-yana)
-      */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 px-6">
-        
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-8 px-6">
         {categories.map((cat, i) => (
           <div key={i} className="flex flex-col group w-full">
-            
+
             {/* Kartın Daxili Karuseli */}
             <div className="relative w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-sm transition-all duration-500 group-hover:shadow-2xl group-hover:-translate-y-2 bg-white">
-              
+
               {/* Daxili Sürüşmə (Şəkillər) */}
               <div className="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth">
                 {cat.images.map((img, index) => (
                   <div key={index} className="min-w-full h-full snap-center">
                     <img
                       src={img}
+                      loading="lazy"
                       alt={cat.title}
                       className="w-full h-full object-cover"
                     />
@@ -72,11 +67,10 @@ const CategoryGrid = () => {
               {/* DAXİLİ NÖQTƏLƏR (Qara və Boz, Böyük) */}
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5 pointer-events-none bg-white/60 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
                 {cat.images.map((_, dotIdx) => (
-                  <div 
-                    key={dotIdx} 
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                      dotIdx === 0 ? 'bg-black scale-110' : 'bg-gray-400'
-                    }`} 
+                  <div
+                    key={dotIdx}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${dotIdx === 0 ? 'bg-black scale-110' : 'bg-gray-400'
+                      }`}
                   />
                 ))}
               </div>

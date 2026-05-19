@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { X, CheckCircle2, Ruler, Layers, Image as ImageIcon, Trash2 } from "lucide-react";
+import { X, CheckCircle2, Ruler, Layers, Image as ImageIcon, Trash2, Plus } from "lucide-react";
+import { formatBytes, MAX_UPLOAD_IMAGE_BYTES, optimizeImageToDataUrl } from "../utils/imageCompression";
+import {
+  DEFAULT_PRODUCT_CATEGORIES,
+  DEFAULT_PRODUCT_STATUSES,
+  loadOptionList,
+  saveCustomOption,
+} from "../utils/adminOptions";
 
 interface EditModalProps {
   product: any;
@@ -24,6 +31,8 @@ const normalizeColor = (color: any) => ({
   mainImage: color.mainImage || color.image || color.preview || null,
 });
 
+const toOption = (value: string) => ({ value, label: value });
+
 const EditModal = ({ product, onClose, onSave }: EditModalProps) => {
   const [formData, setFormData] = useState({
     ...product,
@@ -39,10 +48,39 @@ const EditModal = ({ product, onClose, onSave }: EditModalProps) => {
       : [{ colorCode: "#ffffff", colorName: "", mainImage: null }],
   });
 
+  const [categoryOptions, setCategoryOptions] = useState(() =>
+    loadOptionList(DEFAULT_PRODUCT_CATEGORIES, "categories").map(toOption),
+  );
+  const [statusOptions, setStatusOptions] = useState(() =>
+    loadOptionList(DEFAULT_PRODUCT_STATUSES, "statuses").map(toOption),
+  );
+  const [addingCategory, setAddingCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
+  const [addingStatus, setAddingStatus] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleAddCategory = () => {
+    const savedCategory = saveCustomOption("categories", newCategory);
+    if (!savedCategory) return;
+    setCategoryOptions(loadOptionList(DEFAULT_PRODUCT_CATEGORIES, "categories").map(toOption));
+    setFormData({ ...formData, category: savedCategory });
+    setNewCategory("");
+    setAddingCategory(false);
+  };
+
+  const handleAddStatus = () => {
+    const savedStatus = saveCustomOption("statuses", newStatus);
+    if (!savedStatus) return;
+    setStatusOptions(loadOptionList(DEFAULT_PRODUCT_STATUSES, "statuses").map(toOption));
+    setFormData({ ...formData, status: savedStatus });
+    setNewStatus("");
+    setAddingStatus(false);
   };
 
   const handleColorChange = (index: number, key: string, value: any) => {
@@ -51,15 +89,25 @@ const EditModal = ({ product, onClose, onSave }: EditModalProps) => {
     setFormData({ ...formData, colors: updatedColors });
   };
 
-  const handleImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      handleColorChange(index, "mainImage", reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    try {
+      if (file.size > MAX_UPLOAD_IMAGE_BYTES) {
+        throw new Error(`Şəkil maksimum ${formatBytes(MAX_UPLOAD_IMAGE_BYTES)} ola bilər.`);
+      }
+
+      const optimizedDataUrl = await optimizeImageToDataUrl(file, {
+        maxSizeMB: 0.45,
+        maxWidthOrHeight: 800,
+        initialQuality: 0.82,
+      });
+      handleColorChange(index, "mainImage", optimizedDataUrl);
+    } catch (error: any) {
+      alert(error?.message || "Şəkil sıxışdırıla bilmədi.");
+      e.target.value = "";
+    }
   };
 
   const handleSizeChange = (index: number, key: string, value: string) => {
@@ -70,14 +118,15 @@ const EditModal = ({ product, onClose, onSave }: EditModalProps) => {
 
   const handleSubmit = () => {
     const payload = {
-      name: formData.name,
-      description: formData.description || " ",
+      name: String(formData.name || "").trim(),
+      description: String(formData.description || "").trim() || "Təsvir əlavə edilməyib.",
       category: formData.category,
+      status: formData.status || "Standart",
       room: formData.room || formData.roomType || "",
       partType: formData.partType || formData.fabric || "",
       rating: toNumber(formData.rating || 5),
-      isPopular: formData.status === "Popular" || Boolean(formData.isPopular),
-      isDiscount: formData.status === "Endirimli" || Boolean(formData.isDiscount),
+      isPopular: formData.status === "Popular",
+      isDiscount: formData.status === "Endirimli",
       sizeOptions: formData.sizeOptions.map(normalizeSize),
       colors: formData.colors.map(normalizeColor),
     };
@@ -132,20 +181,43 @@ const EditModal = ({ product, onClose, onSave }: EditModalProps) => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase text-slate-400 tracking-wider">Kateqoriya</label>
-                <select
-                  name="category"
-                  value={formData.category || "Dəst Pərdələr"}
-                  onChange={handleChange}
-                  className="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none font-bold text-[#0A1128] cursor-pointer"
-                >
-                  <option>Dəst Pərdələr</option>
-                  <option>Tüllər</option>
-                  <option>Fonluqlar</option>
-                  <option>Jalüzlər</option>
-                  <option>Aksesuarlar</option>
-                  <option>Kornizlər</option>
-                  <option>Günəşliklər</option>
-                </select>
+                <div className="flex gap-2">
+                  <select
+                    name="category"
+                    value={formData.category || "Dəst Pərdələr"}
+                    onChange={handleChange}
+                    className="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none font-bold text-[#0A1128] cursor-pointer"
+                  >
+                    {categoryOptions.map((item) => (
+                      <option key={item.value} value={item.value}>{item.label}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setAddingCategory((value) => !value)}
+                    className="rounded-2xl border-2 border-slate-100 bg-white px-4 text-slate-500 hover:text-[#C5A059] transition-all"
+                    title="Yeni kateqoriya əlavə et"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+                {addingCategory && (
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      placeholder="Yeni kateqoriya"
+                      className="w-full border-2 border-slate-100 p-3 rounded-2xl focus:border-[#C5A059] outline-none transition-all font-medium"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddCategory}
+                      className="rounded-2xl bg-[#0A1128] px-4 text-[10px] font-black text-white hover:bg-[#C5A059] transition-all"
+                    >
+                      ƏLAVƏ ET
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase text-slate-400 tracking-wider">Otaq Türü</label>
@@ -174,17 +246,43 @@ const EditModal = ({ product, onClose, onSave }: EditModalProps) => {
             </div>
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase text-slate-400 tracking-wider">Status</label>
-              <select
-                name="status"
-                value={formData.status || "Standart"}
-                onChange={handleChange}
-                className="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none font-bold text-[#0A1128] cursor-pointer"
-              >
-                <option>Popular</option>
-                <option>Yeni</option>
-                <option>Endirimli</option>
-                <option>Standart</option>
-              </select>
+              <div className="flex gap-2">
+                <select
+                  name="status"
+                  value={formData.status || "Standart"}
+                  onChange={handleChange}
+                  className="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none font-bold text-[#0A1128] cursor-pointer"
+                >
+                  {statusOptions.map((item) => (
+                    <option key={item.value} value={item.value}>{item.label}</option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => setAddingStatus((value) => !value)}
+                  className="rounded-2xl border-2 border-slate-100 bg-white px-4 text-slate-500 hover:text-[#C5A059] transition-all"
+                  title="Yeni status əlavə et"
+                >
+                  <Plus size={18} />
+                </button>
+              </div>
+              {addingStatus && (
+                <div className="mt-2 flex gap-2">
+                  <input
+                    value={newStatus}
+                    onChange={(e) => setNewStatus(e.target.value)}
+                    placeholder="Yeni status"
+                    className="w-full border-2 border-slate-100 p-3 rounded-2xl focus:border-[#C5A059] outline-none transition-all font-medium"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddStatus}
+                    className="rounded-2xl bg-[#0A1128] px-4 text-[10px] font-black text-white hover:bg-[#C5A059] transition-all"
+                  >
+                    ƏLAVƏ ET
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -262,12 +360,14 @@ const EditModal = ({ product, onClose, onSave }: EditModalProps) => {
                   type="file"
                   className="hidden"
                   id={`edit-file-${index}`}
+                  accept="image/*"
                   onChange={(e) => handleImageChange(index, e)}
                 />
                 <label htmlFor={`edit-file-${index}`} className="cursor-pointer p-2 bg-slate-50 hover:bg-[#C5A059]/10 rounded-xl shrink-0">
                   {color.mainImage || color.image || color.preview ? (
                     <img
                       src={color.mainImage || color.image || color.preview}
+                      loading="lazy"
                       className="w-6 h-6 rounded object-cover shadow-inner"
                       alt="rəng"
                     />

@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ImageIcon, ArrowRight, Loader2 } from "lucide-react";
-import axios from "axios";
 import LeadModal from "./../components/LeadModal";
+import { useCart } from "../components/CartContest";
+import {
+  buildLeadSelectionPayload,
+  extractList,
+  fetchProducts,
+  normalizeProduct,
+  submitLead,
+} from "../utils/services";
 
 const PromoSlider = () => {
   const [phone, setPhone] = useState("");
@@ -11,7 +18,20 @@ const PromoSlider = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("MEASURE");
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isPaused, setIsPaused] = useState(false); // Slider-i dayandırmaq üçün
+  const [isPaused, setIsPaused] = useState(false);
+  const [dbProducts, setDbProducts] = useState([]);
+  const { cartItems, wishlist } = useCart();
+
+  useEffect(() => {
+    fetchProducts()
+      .then((res) => setDbProducts(extractList(res.data).map(normalizeProduct)))
+      .catch((err) => console.error("Məhsullar yüklənmədi:", err));
+  }, []);
+
+  const selectionPayload = useMemo(
+    () => buildLeadSelectionPayload({ cartItems, wishlist, products: dbProducts }),
+    [cartItems, wishlist, dbProducts],
+  );
 
   const handleDiscountSubmit = async (e) => {
     e.preventDefault();
@@ -24,33 +44,37 @@ const PromoSlider = () => {
 
     setStatus("loading");
     try {
-      await axios.post("http://localhost:8080/api/leads", {
+      await submitLead({
         phone,
         source: "DISCOUNT",
         fullName: "Sürətli Müştəri",
+        referrer: new URLSearchParams(window.location.search).get("ref") || "WEB",
+        ...selectionPayload,
       });
       setStatus("success");
       setPhone("");
       setTimeout(() => setStatus("idle"), 5000);
     } catch (err) {
-      alert("Sistem xətası (500). Backend-i yoxlayın.");
+      console.error("Promo lead göndərilmədi:", err);
+      alert("Sistem xətası. Backend-i yoxlayın.");
       setStatus("idle");
     }
   };
 
   const handleLeadConfirm = async (data) => {
-    const formData = new FormData();
-    formData.append("fullName", data.fullName);
-    formData.append("phone", data.phone);
-    formData.append("source", modalType);
-    if (data.file) formData.append("image", data.file);
-
     try {
-      await axios.post("http://localhost:8080/api/leads/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      await submitLead({
+        fullName: data.fullName || "",
+        phone: data.phone || "",
+        email: data.email || undefined,
+        source: modalType,
+        referrer: new URLSearchParams(window.location.search).get("ref") || "WEB",
+        ...selectionPayload,
+        image: data.image,
       });
       setIsSuccess(true);
     } catch (err) {
+      console.error("Lead faylı göndərilmədi:", err);
       alert("Fayl yüklənmədi. Server xətası baş verdi.");
     }
   };
@@ -153,7 +177,7 @@ const PromoSlider = () => {
     <div className="py-20 overflow-hidden bg-white">
       <motion.div
         className="flex gap-8 px-10"
-        animate={isPaused ? { x: 0 } : { x: ["0%", "-50%"] }} // Pause məntiqi
+        animate={isPaused ? { x: 0 } : { x: ["0%", "-50%"] }}
         transition={{ repeat: Infinity, duration: 35, ease: "linear" }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}

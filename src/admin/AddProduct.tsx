@@ -1,6 +1,13 @@
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import useAdminStore from "../store/adminStore";
+import { formatBytes, optimizeImageToDataUrl } from "../utils/imageCompression";
+import {
+  DEFAULT_PRODUCT_CATEGORIES,
+  DEFAULT_PRODUCT_STATUSES,
+  loadOptionList,
+  saveCustomOption,
+} from "../utils/adminOptions";
 import ConfirmModal from "../components/ConfirmModal";
 import {
   CheckCircle2,
@@ -16,7 +23,7 @@ import {
 } from "lucide-react";
 
 // Tiplər
-type ColorOption = { hex: string; name: string; preview: string | null };
+type ColorOption = { hex: string; name: string; preview: string | null; file?: File | null };
 type SizeOption = { size: string; price: string; oldPrice: string };
 type Errors = Record<string, string>;
 
@@ -24,15 +31,8 @@ type Errors = Record<string, string>;
 const SIZE_REGEX = /^\d{2,4}\s*[xX×]\s*\d{2,4}$/;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
-const CATEGORY_MAP = [
-  { value: "Dəst Pərdələr", label: "Dəst Pərdələr" },
-  { value: "Kornizlər", label: "Kornizlər" },
-  { value: "Günəşliklər", label: "Günəşliklər" },
-  { value: "Fonluqlar", label: "Fonluqlar" },
-  { value: "Tüllər", label: "Tüllər" },
-  { value: "Jalüzlər", label: "Jalüzlər" },
-  { value: "Aksesuarlar", label: "Aksesuarlar" },
-];
+const toOption = (value: string) => ({ value, label: value });
+
 
 const AddProduct = () => {
   const addProduct = useAdminStore((state: any) => state.addProduct);
@@ -52,8 +52,19 @@ const AddProduct = () => {
   const [room, setRoom] = useState("Qonaq Otağı");
   const [fabric, setFabric] = useState("");
 
+  const [categoryOptions, setCategoryOptions] = useState(() =>
+    loadOptionList(DEFAULT_PRODUCT_CATEGORIES, "categories").map(toOption),
+  );
+  const [statusOptions, setStatusOptions] = useState(() =>
+    loadOptionList(DEFAULT_PRODUCT_STATUSES, "statuses").map(toOption),
+  );
+  const [addingCategory, setAddingCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
+  const [addingStatus, setAddingStatus] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
+
   const [colors, setColors] = useState<ColorOption[]>([
-    { hex: "#ffffff", name: "", preview: null },
+    { hex: "#ffffff", name: "", preview: null, file: null },
   ]);
   const [sizes, setSizes] = useState<SizeOption[]>([
     { size: "", price: "", oldPrice: "" },
@@ -62,6 +73,24 @@ const AddProduct = () => {
   // Yardımçı Funksiyalar
   const markTouched = (field: string) =>
     setTouched((prev) => ({ ...prev, [field]: true }));
+
+  const handleAddCategory = () => {
+    const savedCategory = saveCustomOption("categories", newCategory);
+    if (!savedCategory) return;
+    setCategoryOptions(loadOptionList(DEFAULT_PRODUCT_CATEGORIES, "categories").map(toOption));
+    setCategory(savedCategory);
+    setNewCategory("");
+    setAddingCategory(false);
+  };
+
+  const handleAddStatus = () => {
+    const savedStatus = saveCustomOption("statuses", newStatus);
+    if (!savedStatus) return;
+    setStatusOptions(loadOptionList(DEFAULT_PRODUCT_STATUSES, "statuses").map(toOption));
+    setStatus(savedStatus);
+    setNewStatus("");
+    setAddingStatus(false);
+  };
 
   const sanitizePriceInput = (value: string) => {
     let cleaned = value.replace(/[^\d.,]/g, "").replace(",", ".");
@@ -105,14 +134,21 @@ const AddProduct = () => {
     if (isSaving) return;
     setIsSaving(true);
 
+    const primaryImageFile =
+      colors[0]?.file && typeof File !== "undefined" && colors[0].file instanceof File
+        ? colors[0].file
+        : null;
+
     const productData = {
-      name,
-      description,
+      name: name.trim(),
+      description: description.trim() || "Təsvir əlavə edilməyib.",
       category,
+      status,
       room,
       partType: fabric,
       isPopular: status === "Popular",
       isDiscount: status === "Endirimli",
+      imageFile: primaryImageFile,
       rating: 5.0,
 
       // 1. ProductSize Entity üçün (Backend RequestDTO-da ad 'sizeOptions' olmalıdır)
@@ -123,10 +159,10 @@ const AddProduct = () => {
       })),
 
       // 2. ProductColor Entity üçün (Backend RequestDTO-da ad 'colors' olmalıdır)
-      colors: colors.map((c) => ({
+      colors: colors.map((c, index) => ({
         colorName: c.name || "Standart",
         colorCode: c.hex,
-        mainImage: c.preview, // Base64 şəkil
+        mainImage: index === 0 && primaryImageFile ? "" : c.preview,
       })),
     };
 
@@ -143,19 +179,32 @@ const AddProduct = () => {
     }
   };
 
-  const handleImageChange = (
+  const handleImageChange = async (
     index: number,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = e.target.files?.[0];
-    if (!file || file.size > MAX_IMAGE_SIZE) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
+    if (!file) return;
+
+    try {
+      if (file.size > MAX_IMAGE_SIZE) {
+        throw new Error(`Şəkil maksimum ${formatBytes(MAX_IMAGE_SIZE)} ola bilər.`);
+      }
+
+      const optimizedDataUrl = await optimizeImageToDataUrl(file, {
+        maxSizeMB: 0.45,
+        maxWidthOrHeight: 800,
+        initialQuality: 0.82,
+      });
+
       const newColors = [...colors];
-      newColors[index].preview = reader.result as string;
+      newColors[index].preview = optimizedDataUrl;
+      newColors[index].file = file;
       setColors(newColors);
-    };
-    reader.readAsDataURL(file);
+    } catch (error: any) {
+      alert(error?.message || "Şəkil sıxışdırıla bilmədi.");
+      e.target.value = "";
+    }
   };
 
   const inputClass = (field: string) => {
@@ -207,33 +256,88 @@ const AddProduct = () => {
                 <label className="text-sm font-bold text-slate-700 block mb-2">
                   Kateqoriya
                 </label>
-                <select
-                  className={inputClass("category")}
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  {CATEGORY_MAP.map((c) => (
-                    <option key={c.value} value={c.value}>
-                      {c.label}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex gap-2">
+                  <select
+                    className={inputClass("category")}
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  >
+                    {categoryOptions.map((c) => (
+                      <option key={c.value} value={c.value}>
+                        {c.label}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setAddingCategory((value) => !value)}
+                    className="rounded-2xl border border-slate-200 bg-white px-4 text-slate-700 hover:border-amber-500 hover:text-amber-600 transition-all"
+                    title="Yeni kateqoriya əlavə et"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+                {addingCategory && (
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      className={inputClass("newCategory")}
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      placeholder="Yeni kateqoriya"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddCategory}
+                      className="rounded-xl bg-slate-900 px-4 text-xs font-black text-white hover:bg-amber-500 transition-all"
+                    >
+                      ƏLAVƏ ET
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div>
                 <label className="text-sm font-bold text-slate-700 block mb-2 flex items-center gap-1">
                   <Tag size={15} className="text-amber-500" /> Status
                 </label>
-                <select
-                  className={inputClass("status")}
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option value="Popular">Popular</option>
-                  <option value="Yeni">Yeni</option>
-                  <option value="Endirimli">Endirimli</option>
-                  <option value="Standart">Standart</option>
-                </select>
+                <div className="flex gap-2">
+                  <select
+                    className={inputClass("status")}
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  >
+                    {statusOptions.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setAddingStatus((value) => !value)}
+                    className="rounded-2xl border border-slate-200 bg-white px-4 text-slate-700 hover:border-amber-500 hover:text-amber-600 transition-all"
+                    title="Yeni status əlavə et"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+                {addingStatus && (
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      className={inputClass("newStatus")}
+                      value={newStatus}
+                      onChange={(e) => setNewStatus(e.target.value)}
+                      placeholder="Yeni status"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddStatus}
+                      className="rounded-xl bg-slate-900 px-4 text-xs font-black text-white hover:bg-amber-500 transition-all"
+                    >
+                      ƏLAVƏ ET
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -373,7 +477,7 @@ const AddProduct = () => {
                 onClick={() =>
                   setColors([
                     ...colors,
-                    { hex: "#ffffff", name: "", preview: null },
+                    { hex: "#ffffff", name: "", preview: null, file: null },
                   ])
                 }
                 className="bg-amber-500 text-white px-5 py-2.5 rounded-xl text-xs font-black shadow-lg hover:bg-slate-900 transition-all"

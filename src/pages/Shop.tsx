@@ -28,6 +28,7 @@ const CATEGORY_ALIASES: Record<string, string[]> = {
   Jalüzlər: ["Jalüzlər", "BLINDS"],
   Kornizlər: ["Kornizlər", "CORNICES"],
   Aksesuarlar: ["Aksesuarlar", "ACCESSORIES"],
+  Pastellər: ["Pastellər", "Pasteller", "PASTELS"],
 };
 
 const getPrice = (product: any) => Number(product?.sizeOptions?.[0]?.price ?? product?.price ?? 0);

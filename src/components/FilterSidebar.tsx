@@ -66,6 +66,7 @@ const FilterSidebar = ({
     "Jalüzlər",
     "Kornizlər",
     "Aksesuarlar",
+    "Pastellər",
   ];
   const rooms = ["Qonaq otağı", "Yataq otağı", "Mətbəx", "Ofis", "Uşaq otağı"];
 

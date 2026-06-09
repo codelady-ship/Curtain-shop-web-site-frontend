@@ -7,23 +7,27 @@ import EditModal from "../components/EditModal";
 import DeleteModal from "../components/DeleteModal";
 import { Search, Loader2, Plus } from "lucide-react";
 import useAdminStore from "../store/adminStore";
+import { getLang, t } from "../utils/i18n";
 
 interface AllModelsProps {
   isAdmin?: boolean;
   products?: any[];
+  showSearch?: boolean;
+  pageSize?: number;
 }
 
 const normalizeText = (value: any) => String(value || "").trim().toLowerCase();
-const priceOf = (p: any) => Number(p?.sizeOptions?.[0]?.price ?? p?.price ?? 0);
 
-const AllModels = ({ isAdmin = false, products: externalProducts }: AllModelsProps) => {
+const AllModels = ({ isAdmin = false, products: externalProducts, showSearch = true, pageSize = 8 }: AllModelsProps) => {
   const isControlledMode = Array.isArray(externalProducts);
   const setActiveTab = useAdminStore((state: any) => state.setActiveTab);
 
+  const [lang, setLang] = useState(getLang());
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(!isControlledMode);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [clientPage, setClientPage] = useState(1);
 
   const [search, setSearch] = useState("");
 
@@ -31,6 +35,12 @@ const AllModels = ({ isAdmin = false, products: externalProducts }: AllModelsPro
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+
+  useEffect(() => {
+    const handler = (event: any) => setLang(event.detail || getLang());
+    window.addEventListener("perde:language", handler);
+    return () => window.removeEventListener("perde:language", handler);
+  }, []);
 
   const loadProducts = useCallback(async () => {
     if (isControlledMode) return;
@@ -76,6 +86,10 @@ const AllModels = ({ isAdmin = false, products: externalProducts }: AllModelsPro
     loadProducts();
   }, [currentPage, isControlledMode, loadProducts]);
 
+  useEffect(() => {
+    setClientPage(1);
+  }, [externalProducts?.length, search]);
+
   const visibleProducts = useMemo(() => {
     const source = isControlledMode ? externalProducts || [] : products;
     let normalized = source.map(normalizeProduct);
@@ -92,6 +106,11 @@ const AllModels = ({ isAdmin = false, products: externalProducts }: AllModelsPro
 
     return normalized;
   }, [isControlledMode, externalProducts, products, search]);
+
+  const controlledTotalPages = Math.max(1, Math.ceil(visibleProducts.length / pageSize));
+  const pagedProducts = isControlledMode
+    ? visibleProducts.slice((clientPage - 1) * pageSize, clientPage * pageSize)
+    : visibleProducts;
 
   const handleUpdate = async (payload: any) => {
     if (!selectedProduct?.id) return;
@@ -120,35 +139,35 @@ const AllModels = ({ isAdmin = false, products: externalProducts }: AllModelsPro
   };
 
   return (
-    <div className="container mx-auto px-6 pb-20">
-      <div className="flex flex-col xl:flex-row gap-4 mb-12 items-center">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+    <div className="w-full pb-20">
+      {(showSearch || isAdmin) && <div className="mb-12 flex flex-col items-center gap-4 xl:flex-row">
+        {showSearch && <div className="relative w-full flex-1">
+          <Search className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-[#C5A059]" size={18} />
           <input
             type="text"
-            placeholder="MODEL, KATEQORİYA VƏ YA PARÇA NÖVÜ AXTAR..."
-            className="w-full bg-white border border-gray-100 rounded-2xl pl-14 py-4 outline-none focus:ring-2 focus:ring-[#C5A059]/30"
+            placeholder={t("searchPlaceholder", lang)}
+            className="w-full rounded-2xl border border-gray-100 bg-white py-4 pl-14 outline-none transition focus:ring-2 focus:ring-[#C5A059]/30 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-        </div>
+        </div>}
 
         {isAdmin && (
           <button
             type="button"
             onClick={() => setActiveTab("add-model")}
-            className="w-full xl:w-auto bg-black text-white px-6 py-4 rounded-2xl flex items-center justify-center gap-2 font-bold hover:bg-[#C5A059] transition-all"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-black px-6 py-4 font-bold text-white transition-all hover:bg-[#C5A059] xl:w-auto"
           >
             <Plus size={20} /> Yeni Model
           </button>
         )}
-      </div>
+      </div>}
 
       {loading ? (
         <div className="flex justify-center py-20"><Loader2 className="animate-spin text-[#C5A059]" size={40} /></div>
-      ) : visibleProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {visibleProducts.map((p) => (
+      ) : pagedProducts.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          {pagedProducts.map((p) => (
             <ProductCard
               key={p.id}
               product={p}
@@ -159,16 +178,20 @@ const AllModels = ({ isAdmin = false, products: externalProducts }: AllModelsPro
           ))}
         </div>
       ) : (
-        <div className="text-center py-20 text-gray-400 font-bold uppercase tracking-widest">Məhsul tapılmadı</div>
+        <div className="py-20 text-center text-sm font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">{t("noProducts", lang)}</div>
+      )}
+
+      {isControlledMode && controlledTotalPages > 1 && (
+        <Pagination currentPage={clientPage} totalPages={controlledTotalPages} onPageChange={(p: number) => setClientPage(p)} />
       )}
 
       {!isControlledMode && totalPages > 1 && (
-        <div className="mt-10"><Pagination current={currentPage} total={totalPages} onChange={(p) => setCurrentPage(p)} /></div>
+        <Pagination currentPage={currentPage + 1} totalPages={totalPages} onPageChange={(p: number) => setCurrentPage(p - 1)} />
       )}
 
       {isEditOpen && selectedProduct && <EditModal product={selectedProduct} onClose={() => setIsEditOpen(false)} onSave={handleUpdate} />}
       {isDeleteOpen && selectedProduct && <DeleteModal onConfirm={handleDelete} onCancel={() => { setIsDeleteOpen(false); setSelectedProduct(null); }} />}
-      {actionLoading && <div className="fixed inset-0 z-[100001] bg-white/40 backdrop-blur-sm flex items-center justify-center"><Loader2 className="animate-spin text-[#C5A059]" size={44} /></div>}
+      {actionLoading && <div className="fixed inset-0 z-[100001] flex items-center justify-center bg-white/40 backdrop-blur-sm"><Loader2 className="animate-spin text-[#C5A059]" size={44} /></div>}
     </div>
   );
 };

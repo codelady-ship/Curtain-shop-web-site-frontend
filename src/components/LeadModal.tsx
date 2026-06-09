@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { X, CheckCircle2, Loader2, Phone, User, Upload, Mail } from "lucide-react";
 import { formatBytes, MAX_UPLOAD_IMAGE_BYTES, optimizeImageFile } from "../utils/imageCompression";
+import { getLang, t } from "../utils/i18n";
 
 const LeadModal = ({
   isOpen,
@@ -19,6 +20,13 @@ const LeadModal = ({
   const [localErrors, setLocalErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [fileProcessing, setFileProcessing] = useState(false);
+  const [lang, setLang] = useState(getLang());
+
+  useEffect(() => {
+    const handler = (event: any) => setLang(event.detail || getLang());
+    window.addEventListener("perde:language", handler);
+    return () => window.removeEventListener("perde:language", handler);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -30,15 +38,15 @@ const LeadModal = ({
 
   const validate = () => {
     const err: any = {};
-    if (!formData.fullName.trim()) err.fullName = "Ad Soyad mütləqdir";
+    if (!formData.fullName.trim()) err.fullName = t("requiredName", lang);
     if (!/^\d+$/.test(formData.phone) || formData.phone.length < 9) {
-      err.phone = "Düzgün nömrə daxil edin";
+      err.phone = t("validPhone", lang);
     }
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      err.email = "Email düzgün deyil";
+      err.email = t("validEmail", lang);
     }
     if (modalType === "VISUAL" && !formData.file) {
-      err.file = "Şəkil yükləmək mütləqdir";
+      err.file = t("requiredPhoto", lang);
     }
 
     setLocalErrors(err);
@@ -96,7 +104,11 @@ const LeadModal = ({
 
   if (!isOpen) return null;
 
-  const allErrors = { ...localErrors, ...backendErrors };
+  const normalizedBackendErrors = backendErrors?.errors && typeof backendErrors.errors === "object"
+    ? backendErrors.errors
+    : backendErrors || {};
+  const allErrors = { ...localErrors, ...normalizedBackendErrors };
+  const formError = allErrors.form || (!Object.keys(normalizedBackendErrors).length && backendErrors?.message ? backendErrors.message : "");
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
@@ -115,21 +127,27 @@ const LeadModal = ({
               <CheckCircle2 size={32} />
             </div>
             <h2 className="text-xl font-black text-slate-900 mb-2">
-              Təşəkkür edirik!
+              {t("thankYou", lang)}
             </h2>
             <p className="text-slate-500 text-sm font-medium px-4">
               {modalType === "VISUAL"
-                ? "Otağınızın dizaynı hazırlanıb ən qısa zamanda WhatsApp nömrənizə göndəriləcək."
-                : "Müraciətiniz qəbul edildi. Tezliklə mütəxəssisimiz sizinlə əlaqə saxlayacaq."}
+                ? t("visualSuccess", lang)
+                : t("requestSuccess", lang)}
             </p>
           </div>
         ) : (
           <div className="space-y-5">
             <h2 className="text-xl font-black uppercase text-center text-slate-900 italic">
-              {modalType === "VISUAL" ? "Virtual Dizayn" : "Ölçü Alımı"}
+              {modalType === "VISUAL" ? t("visualDesign", lang) : t("measurement", lang)}
             </h2>
 
             <div className="space-y-3">
+              {(formError || allErrors.phone) && (
+                <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-center text-xs font-black text-red-600">
+                  {allErrors.phone || formError || t("validPhone", lang)}
+                </div>
+              )}
+
               <div className="relative">
                 <User
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -137,7 +155,7 @@ const LeadModal = ({
                 />
                 <input
                   type="text"
-                  placeholder="Ad Soyad"
+                  placeholder={t("fullName", lang)}
                   className={`w-full pl-10 pr-4 py-3 bg-slate-50 rounded-xl outline-none border-2 transition-all text-sm ${allErrors.fullName ? "border-red-400" : "border-transparent focus:border-[#C5A059]"}`}
                   value={formData.fullName}
                   onChange={(e) =>
@@ -181,7 +199,7 @@ const LeadModal = ({
                 />
                 <input
                   type="email"
-                  placeholder="Email (istəyə bağlı)"
+                  placeholder={t("optionalEmail", lang)}
                   className={`w-full pl-10 pr-4 py-3 bg-slate-50 rounded-xl outline-none border-2 transition-all text-sm ${allErrors.email ? "border-red-400" : "border-transparent focus:border-[#C5A059]"}`}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -201,10 +219,10 @@ const LeadModal = ({
                     <Upload className="text-slate-400 mb-1" size={20} />
                     <span className="text-[10px] text-slate-500 font-bold uppercase text-center px-2">
                       {fileProcessing
-                        ? "Şəkil optimizasiya olunur..."
+                        ? t("optimizingImage", lang)
                         : formData.file
                           ? `${formData.file.name} (${formatBytes(formData.file.size)})`
-                          : "Otağın şəklini yükləyin"}
+                          : t("uploadRoomPhoto", lang)}
                     </span>
                     <input
                       type="file"
@@ -230,7 +248,7 @@ const LeadModal = ({
                 {loading ? (
                   <Loader2 className="animate-spin" size={20} />
                 ) : (
-                  "Təsdiqlə"
+                  t("confirm", lang)
                 )}
               </button>
             </div>

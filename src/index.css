@@ -1,62 +1,94 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  @layer base {
-  body {
-    @apply bg-[#F8F9FA] text-[#1A2238]; 
-  }
-}
+  html { scroll-behavior: smooth; }
+  body { @apply bg-[#F8F9FA] text-[#1A2238] antialiased; }
+  .dark body { background: #020617; color: #e2e8f0; }
 }
 
 @layer components {
   .btn-primary {
     @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300;
   }
-  
+
   .product-card {
     @apply bg-white rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden group hover:-translate-y-2 transition-all duration-500;
+  }
+
+  .admin-input {
+    @apply w-full rounded-2xl bg-slate-50 border border-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:ring-2 focus:ring-[#C5A059]/30 focus:border-[#C5A059]/40;
+  }
+
+  .admin-upload {
+    @apply cursor-pointer rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-sm font-black text-slate-500 flex items-center justify-center gap-2 hover:border-[#C5A059] hover:text-[#C5A059] transition;
+  }
+
+  .admin-action {
+    @apply inline-flex items-center justify-center w-9 h-9 rounded-xl bg-slate-50 text-slate-600 hover:bg-[#0A1128] hover:text-[#C5A059] transition;
+  }
+
+  .admin-label {
+    @apply block text-[10px] font-black uppercase tracking-widest text-slate-400;
   }
 }
 
 @layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #C5A059; }
+
+.partner-track { animation: partner-slide-left 48s linear infinite; }
+.partner-track-reverse { animation-name: partner-slide-right; animation-duration: 48s; }
+.partner-track:hover { animation-play-state: paused; }
+
+.review-track { animation: review-slide-left 42s linear infinite; width: max-content; }
+.review-track:hover { animation-play-state: paused; }
+
+@keyframes review-slide-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes partner-slide-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes partner-slide-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.search-shell svg {
+  transform: translateY(-50%);
+  transform-origin: center;
+  transition: color 180ms ease, opacity 180ms ease;
+}
+.search-shell:focus-within svg {
+  color: #C5A059;
+  opacity: 0.95;
+}
+
+@keyframes category-slide {
+  0%, 24% { transform: translateX(0); }
+  33%, 57% { transform: translateX(-100%); }
+  66%, 90% { transform: translateX(-200%); }
+  100% { transform: translateX(-300%); }
+}
+.animate-category-slide { animation: category-slide 12s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-category-slide,
+  .partner-track,
+  .review-track {
+    animation: none !important;
   }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #C5A059;
-}
-
-/* Scrollbar gizlətmək üçün */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }

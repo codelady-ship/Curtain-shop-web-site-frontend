@@ -1,10 +1,12 @@
 import { useState } from "react";
-import Hero from "./Hero";
-import Shop from "./Shop";
 import PromoSlider from "./PromoSlider";
-import About from "./About"; // About komponenti
-import ReviewsCarousel from "./ReviewsCarousel"; // Reviews komponenti
+import DiscountedProducts from "./DiscountedProducts";
+import Shop from "./Shop";
+import About from "./About";
+import ReviewsCarousel from "./ReviewsCarousel";
+import PartnersCarousel from "./PartnersCarousel";
 import LeadModal from "../components/LeadModal";
+import SEO from "../components/SEO";
 import { submitLead } from "../utils/services";
 
 const HomePage = () => {
@@ -13,13 +15,13 @@ const HomePage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [backendErrors, setBackendErrors] = useState({});
 
-  const openLeadModal = (type) => {
+  const openLeadModal = (type: string) => {
     setBackendErrors({});
     setModalType(type);
     setIsModalOpen(true);
   };
 
-  const handleConfirm = async (formData) => {
+  const handleConfirm = async (formData: any) => {
     try {
       await submitLead({
         phone: formData.phone,
@@ -28,13 +30,12 @@ const HomePage = () => {
         source: modalType,
         image: formData.image,
       });
-
       setIsSuccess(true);
       setTimeout(() => {
         setIsModalOpen(false);
         setIsSuccess(false);
       }, 2500);
-    } catch (error) {
+    } catch (error: any) {
       if (error.response && error.response.status === 400) {
         setBackendErrors(error.response.data);
       }
@@ -42,28 +43,18 @@ const HomePage = () => {
   };
 
   return (
-    <div className="relative bg-white overflow-x-hidden">
-      {/* 1. Hero Bölməsi */}
-      <Hero />
-
-      <div id="promos">
-        <PromoSlider onOpenLeadModal={openLeadModal} />
-      </div>
-
-      {/* ID-ləri bura əlavə edirik */}
+    <div className="relative overflow-x-hidden bg-white dark:bg-slate-950">
+      <SEO />
+      <PromoSlider />
+      <DiscountedProducts />
+      <Shop compactHome />
       <div id="about">
         <About />
       </div>
-
-      <div id="shop">
-        <Shop />
-      </div>
-
-      <div id="testimonials">
+      <div id="customers">
         <ReviewsCarousel />
+        <PartnersCarousel />
       </div>
-
-      {/* Lead Modal - Bütün çağırışlar üçün tək modal */}
       <LeadModal
         isOpen={isModalOpen}
         modalType={modalType}

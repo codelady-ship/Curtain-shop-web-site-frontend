@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Star, ShoppingBag, Heart, Eye, Edit3, Trash2 } from "lucide-react";
 import { useCart } from "../components/CartContest";
 import { Link } from "react-router-dom";
-import { normalizeProduct } from "../utils/productMapper"; // normalizeProduct funksiyasını import edirik
+import { normalizeProduct } from "../utils/productMapper";
+import { getLang, t } from "../utils/i18n";
 
 interface ProductCardProps {
   product: any;
@@ -19,6 +20,13 @@ const ProductCard = ({
   onDelete,
 }: ProductCardProps) => {
   const { addToCart, wishlist, toggleWishlist } = useCart();
+  const [lang, setLang] = useState(getLang());
+
+  useEffect(() => {
+    const handler = (event: any) => setLang(event.detail || getLang());
+    window.addEventListener("perde:language", handler);
+    return () => window.removeEventListener("perde:language", handler);
+  }, []);
 
   const item = normalizeProduct(product); // Normalizə edilmiş məhsul
 
@@ -65,9 +73,9 @@ const ProductCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       whileHover={{ y: -10 }}
-      className="bg-white rounded-[2.5rem] p-4 relative group transition-all duration-500 shadow-sm hover:shadow-xl flex flex-col h-full"
+      className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-4 relative group transition-all duration-500 shadow-sm hover:shadow-xl flex flex-col h-full dark:border dark:border-slate-800"
     >
-      <div className="relative aspect-[3/4] mb-5 rounded-[2rem] overflow-hidden bg-gray-50">
+      <div className="relative aspect-[3/4] mb-5 rounded-[2rem] overflow-hidden bg-gray-50 dark:bg-slate-800">
         {imageSrc ? (
           <img
             src={imageSrc}
@@ -80,14 +88,14 @@ const ProductCard = ({
               if (parent && !parent.querySelector(".image-fallback")) {
                 const fallback = document.createElement("div");
                 fallback.className = "image-fallback w-full h-full flex items-center justify-center text-xs text-gray-400 font-bold uppercase";
-                fallback.innerText = "Şəkil yoxdur";
+                fallback.innerText = t("noImage", lang);
                 parent.appendChild(fallback);
               }
             }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-xs text-gray-400 font-bold uppercase">
-            Şəkil yoxdur
+            {t("noImage", lang)}
           </div>
         )}
 
@@ -131,18 +139,18 @@ const ProductCard = ({
 
       <div className="px-2 flex-grow space-y-3">
         <div className="flex justify-between items-start gap-2">
-          <h4 className="font-bold text-slate-800 text-[13px] uppercase line-clamp-2">
+          <h4 className="font-bold text-slate-800 dark:text-slate-100 text-[13px] uppercase line-clamp-2">
             {item.name}
           </h4>
 
-          <div className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-lg">
+          <div className="flex items-center gap-1 bg-gray-50 dark:bg-slate-800 px-2 py-1 rounded-lg">
             <Star size={10} className="fill-[#C5A059] text-[#C5A059]" />
             <span className="text-[10px] font-bold">{item.rating || 5}</span>
           </div>
         </div>
 
         <div className="flex items-baseline gap-2">
-          <span className="text-xl font-black text-slate-900">
+          <span className="text-xl font-black text-slate-900 dark:text-white">
             {currentPrice.toFixed(2)} ₼
           </span>
 
@@ -161,7 +169,7 @@ const ProductCard = ({
             onClick={handleAddToCart}
             className="flex-1 bg-slate-900 text-white py-4 rounded-2xl flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#C5A059] transition-all"
           >
-            <ShoppingBag size={16} /> Səbətə At
+            <ShoppingBag size={16} /> {t("cartAdd", lang)}
           </button>
 
           <button

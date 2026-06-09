@@ -1,133 +1,114 @@
-import { motion } from 'framer-motion';
-import { Star, Quote, CheckCircle2 } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Star, Quote, CheckCircle2 } from "lucide-react";
+import { getLang, t } from "../utils/i18n";
+
+const reviewTexts: Record<string, any[]> = {
+  AZ: [
+    { name: "Leyla Məmmədova", location: "Bakı, White City", text: "Pərdələr evimin atmosferini tam dəyişdi. Parçaların toxunuşu və keyfiyyəti çox yüksəkdir." },
+    { name: "Anar Əliyev", location: "Bakı, Sea Breeze", text: "Ölçü xidməti operativ gəldi, quraşdırılma dəqiq edildi. Nəticə gözlədiyimdən yaxşıdır." },
+    { name: "Günel Həsənova", location: "Sumqayıt", text: "Vizual məsləhət sayəsində otağa uyğun model seçmək çox asan oldu." },
+    { name: "Fərid Kərimov", location: "Bakı, Port Baku", text: "Ofis üçün blackout pərdələr aldıq. Həm funksionaldır, həm də interyerə uyğundur." },
+    { name: "Nigar Sultanova", location: "Gəncə", text: "Müştəri xidməti nəzakətli idi. Sifariş vaxtında hazırlandı və səliqəli çatdırıldı." },
+    { name: "Elnur Qasımov", location: "Bakı, Badamdar", text: "Premium keyfiyyət axtaranlar üçün düzgün ünvandır. Rənglər kataloqdakı kimi gəldi." },
+  ],
+  RU: [
+    { name: "Лейла Мамедова", location: "Баку, White City", text: "Шторы полностью изменили атмосферу дома. Качество ткани и пошива на высоком уровне." },
+    { name: "Анар Алиев", location: "Баку, Sea Breeze", text: "Замер сделали оперативно, установка прошла точно. Результат лучше ожиданий." },
+    { name: "Гюнель Гасанова", location: "Сумгаит", text: "Благодаря консультации было легко подобрать модель под комнату." },
+    { name: "Фарид Керимов", location: "Баку, Port Baku", text: "Заказывали blackout для офиса. Практично и хорошо выглядит в интерьере." },
+    { name: "Нигяр Султанова", location: "Гянджа", text: "Сервис вежливый, заказ подготовили вовремя и аккуратно доставили." },
+    { name: "Эльнур Гасымов", location: "Баку, Бадамдар", text: "Хороший выбор для тех, кто ищет премиальное качество. Цвета совпали с каталогом." },
+  ],
+  EN: [
+    { name: "Leyla Mammadova", location: "Baku, White City", text: "The curtains changed the atmosphere of my home. Fabric touch and quality feel premium." },
+    { name: "Anar Aliyev", location: "Baku, Sea Breeze", text: "Measurement was fast and the installation was precise. The result exceeded expectations." },
+    { name: "Gunel Hasanova", location: "Sumgayit", text: "The visual consultation made it easy to choose the right model for the room." },
+    { name: "Farid Karimov", location: "Baku, Port Baku", text: "We ordered blackout curtains for the office. They are functional and fit the interior." },
+    { name: "Nigar Sultanova", location: "Ganja", text: "Customer service was polite, and the order was prepared and delivered neatly." },
+    { name: "Elnur Gasimov", location: "Baku, Badamdar", text: "A strong option for premium quality. The colors matched the catalog." },
+  ],
+};
 
 const ReviewsCarousel = () => {
-  const goldColor = '#C5A059';
+  const goldColor = "#C5A059";
+  const [lang, setLang] = useState(getLang());
 
-  const reviews = [
-    { 
-      name: "Leyla Məmmədova", 
-      location: "Bakı, White City",
-      text: "Properde-dən aldığım tüllər evimin atmosferini tamamilə dəyişdi. Parçaların toxunuşu və keyfiyyəti sözlə ifadə edilməzdir. Hər kəsə tövsiyə edirəm!"
-    },
-    { 
-      name: "Anar Əliyev", 
-      location: "Bakı, Sea Breeze",
-      text: "Ölçü götürmə xidməti çox operativdir. Peşəkar yanaşma və dəqiq quraşdırılma. Keyfiyyət gözlədiyimdən də yüksəkdir."
-    },
-    { 
-      name: "Günel Həsənova", 
-      location: "Sumqayıt",
-      text: "3D Vizualizasiya xidməti sayəsində pərdələrin otağımda necə duracağını əvvəlcədən gördüm. Bu, qərar verməyimi çox asanlaşdırdı."
-    },
-    { 
-      name: "Fərid Kərimov", 
-      location: "Bakı, Port Baku",
-      text: "Ofisimiz üçün müraciət etdik. Blackout pərdələr həm funksionaldır, həm də çox şık görünür. İşlərinin ustasıdırlar."
-    },
-    { 
-      name: "Nigar Sultanova", 
-      location: "Gəncə",
-      text: "Müştəri xidmətləri çox nəzakətlidir. Sifarişim vaxtından tez hazır oldu. Paketləmə və çatdırılma mükəmməl idi."
-    },
-    { 
-      name: "Elnur Qasımov", 
-      location: "Bakı, Badamdar",
-      text: "Premium keyfiyyət axtaranlar üçün tək ünvan. Parçaların rəng çalarları tam olaraq kataloqdakı kimidir."
-    }
-  ];
+  useEffect(() => {
+    const handler = (event: any) => setLang(event.detail || getLang());
+    window.addEventListener("perde:language", handler);
+    return () => window.removeEventListener("perde:language", handler);
+  }, []);
 
-  // Sonsuz döngü üçün massivi 3 dəfə təkrarlayırıq
+  const reviews = reviewTexts[lang] || reviewTexts.AZ;
   const repeatedReviews = [...reviews, ...reviews, ...reviews];
 
   return (
-    <section id="testimonials" className="py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-6 mb-16">
-        {/* Başlıq */}
-        <div className="text-center max-w-3xl mx-auto">
+    <section id="testimonials" className="overflow-hidden bg-white py-5 dark:bg-slate-950 md:py-24">
+      <div className="container mx-auto mb-12 px-6 md:mb-14">
+        <div className="mx-auto max-w-3xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex items-center justify-center gap-2 mb-4"
+            className="mb-4 flex items-center justify-center gap-2"
           >
-            <div className="h-[1px] w-8 bg-gray-300"></div>
-            <span style={{ color: goldColor }} className="text-sm uppercase tracking-[0.4em] font-bold">
-              Müştəri Rəyləri
+            <div className="h-[1px] w-8 bg-gray-300 dark:bg-slate-700" />
+            <span style={{ color: goldColor }} className="text-sm font-bold uppercase tracking-[0.4em]">
+              {t("reviews", lang)}
             </span>
-            <div className="h-[1px] w-8 bg-gray-300"></div>
+            <div className="h-[1px] w-8 bg-gray-300 dark:bg-slate-700" />
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-serif text-slate-900 mb-6">Məmnun Müştərilərimiz</h2>
+          <h2 className="mb-6 font-serif text-4xl text-slate-900 dark:text-white md:text-5xl">{t("happyCustomers", lang)}</h2>
         </div>
       </div>
 
-      {/* Karusel Sahəsi */}
-      <div className="flex relative">
-        {/* Kənar kölgə effektləri (Fade) */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-r from-white to-transparent z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-l from-white to-transparent z-10" />
+      <div className="relative flex">
+        <div className="absolute bottom-0 left-0 top-0 z-10 w-20 bg-gradient-to-r from-white to-transparent dark:from-slate-950 md:w-40" />
+        <div className="absolute bottom-0 right-0 top-0 z-10 w-20 bg-gradient-to-l from-white to-transparent dark:from-slate-950 md:w-40" />
 
-        <motion.div 
-          className="flex gap-6 whitespace-nowrap py-4"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ 
-            repeat: Infinity, 
-            duration: 40, 
-            ease: "linear" 
-          }}
-          whileHover={{ transition: { duration: 100 } }} // Üzərinə gələndə yavaşlayır
-        >
+        <div className="review-track flex gap-5 whitespace-nowrap py-4">
           {repeatedReviews.map((review, i) => (
-            <div 
-              key={i} 
-              className="inline-block w-[350px] md:w-[420px] p-8 md:p-10 bg-zinc-50 rounded-[2.5rem] border border-transparent hover:border-[#C5A059]/30 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.05)] transition-all duration-500 group"
+            <div
+              key={i}
+              className="group inline-block w-[300px] rounded-[2rem] border border-transparent bg-zinc-50 p-6 transition-all duration-500 hover:-translate-y-1 hover:border-[#C5A059]/35 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] dark:bg-slate-900 dark:hover:bg-slate-900 md:w-[360px]"
             >
-              {/* Ulduzlar və Sitat */}
-              <div className="flex justify-between items-start mb-6">
+              <div className="mb-5 flex items-start justify-between">
                 <div className="flex gap-1">
                   {[...Array(5)].map((_, s) => (
-                    <Star key={s} size={14} fill={goldColor} color={goldColor} />
+                    <Star key={s} size={13} fill={goldColor} color={goldColor} />
                   ))}
                 </div>
-                <Quote size={36} className="text-[#C5A059]/10 group-hover:text-[#C5A059]/20 transition-colors" />
+                <Quote size={30} className="text-[#C5A059]/10 transition-colors group-hover:text-[#C5A059]/25" />
               </div>
 
-              {/* Rəy Mətni */}
-              <p className="text-slate-700 text-sm md:text-base leading-relaxed font-light whitespace-normal italic mb-8">
-                "{review.text}"
+              <p className="mb-7 whitespace-normal text-sm font-light italic leading-relaxed text-slate-700 dark:text-slate-300">
+                “{review.text}”
               </p>
 
-              {/* İstifadəçi Məlumatı */}
-              <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
-                <div 
+              <div className="flex items-center gap-4 border-t border-gray-100 pt-5 dark:border-slate-800">
+                <div
                   style={{ backgroundColor: `${goldColor}15`, color: goldColor }}
-                  className="w-12 h-12 rounded-full flex items-center justify-center font-serif text-lg font-bold border border-[#C5A059]/20"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-[#C5A059]/20 font-serif text-lg font-bold"
                 >
                   {review.name[0]}
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h4 className="font-bold text-slate-900 text-sm tracking-tight">{review.name}</h4>
+                    <h4 className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">{review.name}</h4>
                     <CheckCircle2 size={14} className="text-blue-500" />
                   </div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-widest font-medium">
-                    {review.location}
-                  </p>
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-gray-400">{review.location}</p>
                 </div>
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
-      {/* Alt Reytinq Göstəricisi */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        className="mt-16 text-center"
-      >
-        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-400 font-bold">
-          Ortalama reytinq: <span className="text-slate-900">4.9/5.0</span>
+      <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-12 text-center">
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
+          {t("averageRating", lang)}: <span className="text-slate-900 dark:text-white">4.9/5.0</span>
         </p>
       </motion.div>
     </section>

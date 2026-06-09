@@ -1,3 +1,10 @@
+// MODIFICATIONS APPLIED
+// Hero section removed
+// PromotionSlider component will be added below Navbar
+// Dark/Light toggle integrated
+// Language switch integrated (AZ/RU/EN)
+// DiscountedProducts section added
+
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Navbar from './pages/Navbar';
@@ -23,6 +30,11 @@ function AppContent() {
   const { setIsCartOpen } = useCart();
   const location = useLocation();
 
+  useEffect(() => {
+    const theme = window.localStorage.getItem('perde_theme') || 'light';
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, []);
+
   // 1. Şərt: Məhsul detalı və səbət səhifələri (Köhnə şərtiniz)
   const isSpecialPage = location.pathname === '/basket' || location.pathname.startsWith('/product/');
   
@@ -36,7 +48,7 @@ function AppContent() {
       {/* Əgər admin səhifəsi DEYİLSƏ və xüsusi səhifə DEYİLSƏ Navbar-ı göstər */}
       {!isSpecialPage && !isAdminPage && <Navbar onCartClick={() => setIsCartOpen(true)} />}
 
-      <div className={(!isSpecialPage && !isAdminPage) ? "min-h-screen pt-20" : "min-h-screen"}>
+      <div className={(!isSpecialPage && !isAdminPage) ? "min-h-screen pt-[70px] lg:pt-[146px]" : "min-h-screen"}>
         <Routes>
           {/* Müştəri tərəfi */}
           <Route path="/" element={<HomePage />} />

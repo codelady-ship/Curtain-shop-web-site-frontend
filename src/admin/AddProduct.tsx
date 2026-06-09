@@ -46,7 +46,11 @@ const AddProduct = () => {
 
   // Form States
   const [name, setName] = useState("");
+  const [nameRu, setNameRu] = useState("");
+  const [nameEn, setNameEn] = useState("");
   const [description, setDescription] = useState("");
+  const [descriptionRu, setDescriptionRu] = useState("");
+  const [descriptionEn, setDescriptionEn] = useState("");
   const [category, setCategory] = useState("Dəst Pərdələr");
   const [status, setStatus] = useState("Popular");
   const [room, setRoom] = useState("Qonaq Otağı");
@@ -141,7 +145,13 @@ const AddProduct = () => {
 
     const productData = {
       name: name.trim(),
+      nameAz: name.trim(),
+      nameRu: nameRu.trim(),
+      nameEn: nameEn.trim(),
       description: description.trim() || "Təsvir əlavə edilməyib.",
+      descriptionAz: description.trim() || "Təsvir əlavə edilməyib.",
+      descriptionRu: descriptionRu.trim(),
+      descriptionEn: descriptionEn.trim(),
       category,
       status,
       room,
@@ -250,6 +260,30 @@ const AddProduct = () => {
                     {errors.name}
                   </p>
                 )}
+              </div>
+
+              <div>
+                <label className="text-sm font-bold text-slate-700 block mb-2">
+                  Model adı — Rus dili
+                </label>
+                <input
+                  className={inputClass("nameRu")}
+                  value={nameRu}
+                  onChange={(e) => setNameRu(e.target.value)}
+                  placeholder="Напр: Современная зебра"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-bold text-slate-700 block mb-2">
+                  Model adı — İngilis dili
+                </label>
+                <input
+                  className={inputClass("nameEn")}
+                  value={nameEn}
+                  onChange={(e) => setNameEn(e.target.value)}
+                  placeholder="Example: Modern Zebra"
+                />
               </div>
 
               <div>
@@ -369,16 +403,40 @@ const AddProduct = () => {
                 />
               </div>
 
-              <div className="md:col-span-2 lg:col-span-3">
-                <label className="text-sm font-bold text-slate-700 block mb-2">
-                  Təsvir
-                </label>
-                <textarea
-                  className={`${inputClass("description")} min-h-[100px] resize-none`}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Məhsul haqqında qısa məlumat..."
-                />
+              <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <div>
+                  <label className="text-sm font-bold text-slate-700 block mb-2">
+                    Təsvir — Azərbaycan dili
+                  </label>
+                  <textarea
+                    className={`${inputClass("description")} min-h-[100px] resize-none`}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Məhsul haqqında qısa məlumat..."
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-bold text-slate-700 block mb-2">
+                    Описание — Русский язык
+                  </label>
+                  <textarea
+                    className={`${inputClass("descriptionRu")} min-h-[100px] resize-none`}
+                    value={descriptionRu}
+                    onChange={(e) => setDescriptionRu(e.target.value)}
+                    placeholder="Краткое описание товара..."
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-bold text-slate-700 block mb-2">
+                    Description — English
+                  </label>
+                  <textarea
+                    className={`${inputClass("descriptionEn")} min-h-[100px] resize-none`}
+                    value={descriptionEn}
+                    onChange={(e) => setDescriptionEn(e.target.value)}
+                    placeholder="Short product description..."
+                  />
+                </div>
               </div>
             </div>
           </section>

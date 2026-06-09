@@ -1,56 +1,56 @@
-import { Instagram, Facebook, Phone, Mail, MapPin, Music2, ChevronUp } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Instagram, Facebook, Phone, Mail, MapPin, Music2, ChevronUp } from "lucide-react";
+import { categories, categoryLabel, getLang, t } from "../utils/i18n";
 
 const Footer = () => {
-  const goldColor = '#C5A059';
+  const goldColor = "#C5A059";
+  const [lang, setLang] = useState(getLang());
+
+  useEffect(() => {
+    const handler = (event: any) => setLang(event.detail || getLang());
+    window.addEventListener("perde:language", handler);
+    return () => window.removeEventListener("perde:language", handler);
+  }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const scrollToSection = (id) => {
+  const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80;
+      const offset = 84;
       const y = element.getBoundingClientRect().top + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: y,
-        behavior: 'smooth'
-      });
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
 
   return (
-    <footer className="bg-black text-white pt-20 pb-10 border-t border-zinc-900 relative" id="footer">
-
-      {/* Yuxarı qalx düyməsi */}
+    <footer className="relative border-t border-zinc-900 bg-black pt-10 pb-5 text-white" id="footer">
       <button
         onClick={scrollToTop}
-        className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-black border border-zinc-800 rounded-full flex items-center justify-center hover:border-[#C5A059] transition-all group shadow-2xl z-20"
+        className="absolute -top-6 left-1/2 z-20 flex h-12 w-12 -translate-x-1/2 items-center justify-center rounded-full border border-zinc-800 bg-black shadow-2xl transition-all hover:border-[#C5A059]"
+        aria-label="Yuxarı qalx"
       >
-        <ChevronUp size={24} style={{ color: goldColor }} className="group-hover:-translate-y-1 transition-transform" />
+        <ChevronUp size={24} style={{ color: goldColor }} className="transition-transform group-hover:-translate-y-1" />
       </button>
 
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-
-          {/* Sosial */}
-          <div className="flex flex-col items-center sm:items-start space-y-6">
-            <h2 className="text-sm font-serif font-bold tracking-[0.2em] uppercase">
-              Sosial Şəbəkələrimiz
-            </h2>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+          <div className="flex flex-col items-center space-y-4 sm:items-start">
+            <h2 className="font-serif text-sm font-bold uppercase tracking-[0.2em]">{t("social", lang)}</h2>
             <div className="flex gap-4">
               {[
                 { icon: <Instagram size={18} />, link: "https://www.instagram.com/pro.perde?igsh=NmEyY3loMXhra2Zv&utm_source=qr" },
                 { icon: <Facebook size={18} />, link: "https://www.facebook.com/share/1DzVFVwJpN/?mibextid=wwXIfr" },
-                { icon: <Music2 size={18} />, link: "https://www.tiktok.com/@properde.az?_r=1&_t=ZS-96LwM7fK2lD" }
+                { icon: <Music2 size={18} />, link: "https://www.tiktok.com/@properde.az?_r=1&_t=ZS-96LwM7fK2lD" },
               ].map((social, idx) => (
                 <a
                   key={idx}
                   href={social.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:border-[#C5A059] transition-all"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-800 transition-all hover:border-[#C5A059] hover:bg-zinc-900"
                   style={{ color: goldColor }}
                 >
                   {social.icon}
@@ -59,91 +59,53 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Məlumat */}
           <div className="flex flex-col items-center sm:items-start">
-            <h4 className="text-[11px] font-black uppercase tracking-[0.3em] mb-8" style={{ color: goldColor }}>
-              Məlumat
-            </h4>
-            <ul className="space-y-4 text-sm text-zinc-400 font-medium text-center sm:text-left">
-              <li><button onClick={() => scrollToSection('haqqimizda')} className="hover:text-white">Haqqımızda</button></li>
-              <li><button onClick={() => scrollToSection('promos')} className="hover:text-white transition-colors">Kampaniyalar</button></li>
-              <li><button onClick={() => scrollToSection('haqqimizda')} className="hover:text-white">Zəmanət</button></li>
-              <li><button onClick={() => scrollToSection('haqqimizda')} className="hover:text-white">İadə qaydaları</button></li>
+            <h4 className="mb-5 text-[11px] font-black uppercase tracking-[0.3em]" style={{ color: goldColor }}>{t("info", lang)}</h4>
+            <ul className="space-y-3 text-center text-sm font-medium text-zinc-400 sm:text-left">
+              <li><button onClick={() => scrollToSection("about")} className="transition-colors hover:text-white">{t("about", lang)}</button></li>
+              <li><button onClick={() => scrollToSection("promos")} className="transition-colors hover:text-white">{t("campaign", lang)}</button></li>
+              <li><button onClick={() => scrollToSection("about")} className="transition-colors hover:text-white">{t("warranty", lang)}</button></li>
+              <li><button onClick={() => scrollToSection("about")} className="transition-colors hover:text-white">{t("returnRules", lang)}</button></li>
             </ul>
           </div>
 
-          {/* Kataloq */}
           <div className="flex flex-col items-center sm:items-start">
-            <h4 className="text-[11px] font-black uppercase tracking-[0.3em] mb-8" style={{ color: goldColor }}>
-              Kataloq
-            </h4>
-            <ul className="space-y-4 text-sm text-zinc-400 font-medium text-center sm:text-left">
-              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Dəst pərdələr</button></li>
-              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Günəşliklər</button></li>
-              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Tüllər</button></li>
-              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Jalüzlər</button></li>
-              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Aksesuarlar</button></li>
-              <li><button onClick={() => scrollToSection('shop')} className="hover:text-white">Kornizlər</button></li>
+            <h4 className="mb-5 text-[11px] font-black uppercase tracking-[0.3em]" style={{ color: goldColor }}>{t("catalog", lang)}</h4>
+            <ul className="space-y-3 text-center text-sm font-medium text-zinc-400 sm:text-left">
+              {categories.filter((item) => item !== "Hamısı").slice(0, 6).map((item) => (
+                <li key={item}><button onClick={() => scrollToSection("shop")} className="hover:text-white">{categoryLabel(item, lang)}</button></li>
+              ))}
             </ul>
           </div>
 
-          {/* Əlaqə */}
           <div className="flex flex-col items-center sm:items-start">
-            <h4 className="text-[11px] font-black uppercase tracking-[0.3em] mb-8" style={{ color: goldColor }}>
-              Əlaqə
-            </h4>
-            <ul className="space-y-5 text-[13px] text-zinc-400">
-
-              {/* MAP */}
-              <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3 group">
+            <h4 className="mb-5 text-[11px] font-black uppercase tracking-[0.3em]" style={{ color: goldColor }}>{t("contact", lang)}</h4>
+            <ul className="space-y-4 text-[13px] text-zinc-400">
+              <li className="flex flex-col items-center gap-3 sm:flex-row sm:items-start">
                 <MapPin size={18} style={{ color: goldColor }} />
-                <a
-                  href="https://www.google.com/maps?q=Bakı+Nizami+rayonu+B.Nuriyev+322"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-center sm:text-left hover:text-white"
-                >
-                  Bakı ş. Nizami r-nu <br /> B. Nuriyev 322
+                <a href="https://www.google.com/maps?q=Bakı+Nizami+rayonu+B.Nuriyev+322" target="_blank" rel="noopener noreferrer" className="whitespace-pre-line text-center hover:text-white sm:text-left">
+                  {t("address", lang)}
                 </a>
               </li>
-
-              {/* WHATSAPP */}
-              <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3 group">
+              <li className="flex flex-col items-center gap-3 sm:flex-row sm:items-start">
                 <Phone size={18} style={{ color: goldColor }} />
-                <a
-                  href="https://wa.me/994992900055?text=Salam%20məhsullar%20haqqında%20məlumat%20almaq%20istəyirəm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white font-bold"
-                >
-                  099 290 00 55
-                </a>
+                <a href="https://wa.me/994992900055?text=Salam%20məhsullar%20haqqında%20məlumat%20almaq%20istəyirəm" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-white">099 290 00 55</a>
               </li>
-
-              {/* EMAIL */}
-              <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3 group">
+              <li className="flex flex-col items-center gap-3 sm:flex-row sm:items-start">
                 <Mail size={18} style={{ color: goldColor }} />
-                <a
-                  href="mailto:Properde1978@gmail.com"
-                  className="hover:text-white"
-                >
-                  Properde1978@gmail.com
-                </a>
+                <a href="mailto:info@perde.az" className="hover:text-white">info@perde.az</a>
               </li>
-
             </ul>
           </div>
-
         </div>
 
-        {/* Bottom */}
-        <div className="mt-20 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[10px] text-zinc-600 tracking-[0.2em] uppercase text-center md:text-left">
-            © 2026 <span className="text-zinc-400">PROPERDƏ</span>. Bütün hüquqlar qorunur.
+        <div className="mt-8 flex flex-col items-center justify-between gap-6 border-t border-zinc-900 pt-6 md:flex-row">
+          <p className="text-center text-[10px] uppercase tracking-[0.2em] text-zinc-600 md:text-left">
+            © 2026 <span className="text-zinc-400">PERDE.AZ</span>. {t("rights", lang)}
           </p>
-          <div className="flex gap-8 text-[9px] text-zinc-700 tracking-[0.2em] uppercase font-bold">
-            <a href="#" className="hover:text-zinc-400">Məxfilik Siyasəti</a>
-            <a href="#" className="hover:text-zinc-400">İstifadə Şərtləri</a>
+          <div className="flex gap-8 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-700">
+            <a href="#" className="hover:text-zinc-400">{t("privacy", lang)}</a>
+            <a href="#" className="hover:text-zinc-400">{t("terms", lang)}</a>
           </div>
         </div>
       </div>

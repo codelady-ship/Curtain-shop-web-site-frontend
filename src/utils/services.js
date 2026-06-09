@@ -12,9 +12,9 @@ export const fetchProducts = () => api.get("/products/all", { params: { page: 0,
 
 export const getProductById = (id) => api.get(`/products/${id}`);
 
-export const deleteProductApi = (id) => api.delete(`/products/${id}`);
+export const deleteProductApi = (id) => api.delete(`/admin/products/${id}`);
 
-export const updateProductApi = (id, productData) => api.put(`/products/${id}`, productData);
+export const updateProductApi = (id, productData) => api.put(`/admin/products/${id}`, productData);
 
 export const createProductApi = (productData = {}) => {
   const imageFile = productData.imageFile || productData.primaryImageFile;
@@ -26,10 +26,10 @@ export const createProductApi = (productData = {}) => {
     const formData = new FormData();
     formData.append("image", imageFile);
     formData.append("product", new Blob([JSON.stringify(payload)], { type: "application/json" }));
-    return api.post("/products/upload", formData);
+    return api.post("/admin/products/upload", formData);
   }
 
-  return api.post("/products", payload);
+  return api.post("/admin/products", payload);
 };
 
 export const createProductWithImage = (productData, imageFile) => {
@@ -37,7 +37,7 @@ export const createProductWithImage = (productData, imageFile) => {
   formData.append("image", imageFile);
   formData.append("product", new Blob([JSON.stringify(productData)], { type: "application/json" }));
 
-  return api.post("/products/upload", formData);
+  return api.post("/admin/products/upload", formData);
 };
 
 export const fetchFilteredProductsApi = (params = {}) => {
@@ -54,7 +54,7 @@ export const fetchFilteredProductsApi = (params = {}) => {
   });
 };
 
-export const trackSiteVisit = () => api.post("/analytics/hit");
+export const trackSiteVisit = () => api.post("/analytics/hit", null, { headers: { "X-Page-Path": typeof window !== "undefined" ? window.location.pathname + window.location.search : "/" } });
 export const getDashboardData = () => api.get("/analytics/dashboard");
 export const getLeadStats = () => api.get("/leads/stats");
 
@@ -276,3 +276,20 @@ export const normalizeProduct = (product = {}) => {
     sizeOptions: normalizedSizes,
   };
 };
+
+export const adminLogin = (password, username = "admin") => api.post("/admin/auth/login", { username, password });
+export const changeAdminPassword = (currentPassword, newPassword) => api.post("/admin/auth/change-password", { currentPassword, newPassword });
+
+export const getBanners = (activeOnly = true) => api.get("/banners", { params: { activeOnly } });
+export const getAdminBanners = () => api.get("/admin/banners");
+export const createBanner = (payload) => api.post("/admin/banners", payload);
+export const updateBanner = (id, payload) => api.put(`/admin/banners/${id}`, payload);
+export const deleteBanner = (id) => api.delete(`/admin/banners/${id}`);
+
+export const getPartners = (activeOnly = true) => api.get("/partners", { params: { activeOnly } });
+export const getAdminPartners = () => api.get("/admin/partners");
+export const createPartner = (payload) => api.post("/admin/partners", payload);
+export const updatePartner = (id, payload) => api.put(`/admin/partners/${id}`, payload);
+export const deletePartner = (id) => api.delete(`/admin/partners/${id}`);
+
+export const softDeleteLead = (id) => api.delete(`/leads/${id}/soft-delete`);

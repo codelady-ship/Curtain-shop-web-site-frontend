@@ -36,10 +36,13 @@ const LeadModal = ({
     }
   }, [isOpen]);
 
+  const normalizePhone = (value: string) => String(value || "").replace(/\D/g, "");
+
   const validate = () => {
     const err: any = {};
+    const digits = normalizePhone(formData.phone);
     if (!formData.fullName.trim()) err.fullName = t("requiredName", lang);
-    if (!/^\d+$/.test(formData.phone) || formData.phone.length < 9) {
+    if (!/^(0\d{9}|994\d{9}|\d{9})$/.test(digits)) {
       err.phone = t("validPhone", lang);
     }
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -59,9 +62,9 @@ const LeadModal = ({
     setLoading(true);
     try {
       await onConfirm({
-        fullName: formData.fullName,
-        phone: formData.phone,
-        email: formData.email,
+        fullName: formData.fullName.trim(),
+        phone: normalizePhone(formData.phone),
+        email: formData.email.trim(),
         image: formData.file,
       });
     } finally {
@@ -179,11 +182,7 @@ const LeadModal = ({
                   placeholder="0500000000"
                   className={`w-full pl-10 pr-4 py-3 bg-slate-50 rounded-xl outline-none border-2 transition-all text-sm ${allErrors.phone ? "border-red-400" : "border-transparent focus:border-[#C5A059]"}`}
                   value={formData.phone}
-                  onChange={(e) => {
-                    if (/^\d*$/.test(e.target.value)) {
-                      setFormData({ ...formData, phone: e.target.value });
-                    }
-                  }}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 />
               </div>
               {allErrors.phone && (

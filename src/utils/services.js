@@ -1,6 +1,13 @@
 import api from "./api.js";
 
-const BACKEND_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN || "";
+const normalizeBackendOrigin = (value) => {
+  const cleaned = String(value || "").trim().replace(/\s+/g, "").replace(/\/+$/g, "");
+  if (!cleaned || cleaned === "/") return "";
+  if (/^https?:\/\//i.test(cleaned)) return cleaned;
+  return "";
+};
+
+const BACKEND_ORIGIN = normalizeBackendOrigin(import.meta.env.VITE_BACKEND_ORIGIN);
 
 export const getAllProducts = (page = 0, size = 10) => {
   return api.get("/products/all", {
@@ -276,6 +283,12 @@ export const normalizeProduct = (product = {}) => {
     sizeOptions: normalizedSizes,
   };
 };
+
+
+export const getAdminProfile = () => api.get("/admin/auth/profile");
+export const updateAdminProfile = (payload) => api.put("/admin/auth/profile", payload);
+export const forgotAdminPassword = (payload) => api.post("/admin/auth/forgot-password", payload);
+export const resetAdminPassword = (payload) => api.post("/admin/auth/reset-password", payload);
 
 export const adminLogin = (password, username = "admin") => api.post("/admin/auth/login", { username, password });
 export const changeAdminPassword = (currentPassword, newPassword) => api.post("/admin/auth/change-password", { currentPassword, newPassword });

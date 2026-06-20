@@ -14,6 +14,7 @@ const BasketAndFavorite = () => {
   const [lang, setLang] = useState(getLang());
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [backendErrors, setBackendErrors] = useState<any>({});
   const [dbProducts, setDbProducts] = useState<any[]>([]);
 
   useEffect(() => {
@@ -35,23 +36,31 @@ const BasketAndFavorite = () => {
   const localizedCartItems = useMemo(() => cartItems.map((item: any) => ({ ...item, name: localized(item, "name", lang, item.name), description: localized(item, "description", lang, item.description) })), [cartItems, lang]);
 
   const handleCheckout = () => {
-    if (cartItems.length > 0) setIsLeadModalOpen(true);
+    if (cartItems.length > 0) {
+      setBackendErrors({});
+      setIsLeadModalOpen(true);
+    }
   };
 
   const subtotal = useMemo(() => buildLeadSelectionPayload({ cartItems, wishlist, products: dbProducts }).totalAmount, [cartItems, wishlist, dbProducts]);
 
   const handleConfirmOrder = async (data: any) => {
+    setBackendErrors({});
     const selectionPayload = buildLeadSelectionPayload({ cartItems, wishlist, products: dbProducts });
-    await submitLead({
-      fullName: data.fullName,
-      phone: data.phone,
-      email: data.email,
-      source: "ORDER",
-      referrer: new URLSearchParams(window.location.search).get("ref") || "WEB",
-      ...selectionPayload,
-      image: data.image,
-    });
-    setIsSuccess(true);
+    try {
+      await submitLead({
+        fullName: data.fullName,
+        phone: data.phone,
+        email: data.email,
+        source: "ORDER",
+        referrer: new URLSearchParams(window.location.search).get("ref") || "WEBSITE",
+        ...selectionPayload,
+        image: data.image,
+      });
+      setIsSuccess(true);
+    } catch (error: any) {
+      setBackendErrors(error?.response?.data || { message: "Sifariş göndərilmədi. Məlumatları yoxlayın." });
+    }
   };
 
   return (
@@ -203,7 +212,7 @@ const BasketAndFavorite = () => {
 
       <AnimatePresence>
         {isLeadModalOpen && (
-          <LeadModal isOpen={isLeadModalOpen} onClose={() => { setIsLeadModalOpen(false); setIsSuccess(false); }} onConfirm={handleConfirmOrder} isSuccess={isSuccess} />
+          <LeadModal isOpen={isLeadModalOpen} onClose={() => { setIsLeadModalOpen(false); setIsSuccess(false); setBackendErrors({}); }} onConfirm={handleConfirmOrder} isSuccess={isSuccess} errors={backendErrors} />
         )}
       </AnimatePresence>
 

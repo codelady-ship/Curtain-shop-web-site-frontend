@@ -129,6 +129,11 @@ const isValidPhone = (value: string) => {
   const digits = phoneDigits(value);
   return /^(0\d{9}|994\d{9}|\d{9})$/.test(digits);
 };
+const normalizedLeadPhone = (value: string) => {
+  const digits = phoneDigits(value);
+  if (digits.startsWith("0") && digits.length === 10) return `994${digits.slice(1)}`;
+  return digits;
+};
 
 const blankForm = (): CampaignFormState => ({
   fullName: "",
@@ -331,7 +336,7 @@ const PromoSlider = () => {
       const title = localized(banner, "title", lang, "Kampaniya");
       await submitLead({
         fullName: fullName || "Sayt ziyarətçisi",
-        phone,
+        phone: normalizedLeadPhone(phone),
         source: leadSourceFor(type),
         referrer: "WEBSITE",
         message: leadMessageFor(type, title),
@@ -345,7 +350,7 @@ const PromoSlider = () => {
       setStates((prev) => ({ ...prev, [key]: "success" }));
       setForms((prev) => ({ ...prev, [key]: blankForm() }));
     } catch (error: any) {
-      const backendMessage = error?.response?.data?.errors?.phone || error?.response?.data?.message || t("validPhone", lang);
+      const backendMessage = error?.response?.data?.errors?.phone || error?.response?.data?.message || "Müraciət göndərilmədi. Məlumatları yoxlayın.";
       setStates((prev) => ({ ...prev, [key]: "error" }));
       setCardMessages((prev) => ({ ...prev, [key]: backendMessage }));
     }

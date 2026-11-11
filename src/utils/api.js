@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getDemoResponse, isBackendUnavailable } from "./demoApi.js";
 
 const normalizeApiBaseUrl = (value) => {
   const cleaned = String(value || "")
@@ -34,6 +35,21 @@ api.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error),
+);
+
+// Backend down or not deployed (static demo): answer public product reads with demo data.
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (isBackendUnavailable(error)) {
+      const demo = getDemoResponse(error.config);
+      if (demo) {
+        console.warn(`API unavailable, showing demo data for ${error.config?.url}`);
+        return { status: 200, statusText: "OK", headers: {}, config: error.config, ...demo };
+      }
+    }
+    return Promise.reject(error);
+  },
 );
 
 export default api;

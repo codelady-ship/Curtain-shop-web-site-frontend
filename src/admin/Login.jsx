@@ -1,14 +1,16 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login(){
 
   const [error,setError] = useState("");
+  const navigate = useNavigate();
 
   const login = () => {
     const token = "mock_token";
     localStorage.setItem("token", token);
-    window.location.href="/admin";
+    navigate("/admin");
   }
 
   return (

@@ -134,10 +134,12 @@ export const sameProductId = (left, right) => String(left ?? "") === String(righ
 
 const productUrl = (id) => {
   if (!id) return "";
+  // BASE_URL is "/" normally and "/Curtain-shop-web-site-frontend/" in the GitHub Pages build.
+  const path = `${String(import.meta.env.BASE_URL || "/").replace(/\/+$/, "")}/product/${id}`;
   if (typeof window === "undefined" || !window.location?.origin) {
-    return `/product/${id}`;
+    return path;
   }
-  return `${window.location.origin}/product/${id}`;
+  return `${window.location.origin}${path}`;
 };
 
 const productName = (item = {}) => firstValue(item.name, item.productName, item.modelName, item.title, item.id ? `Məhsul ID: ${item.id}` : "Adsız Məhsul");

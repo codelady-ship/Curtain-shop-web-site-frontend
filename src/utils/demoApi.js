@@ -24,6 +24,36 @@ const matches = (product, params = {}) => {
   return true;
 };
 
+const lowestPrice = (product) => {
+  const prices = (product.sizeOptions || []).map((option) => Number(option.price)).filter(Number.isFinite);
+  return prices.length ? Math.min(...prices) : 0;
+};
+
+// Same sortType values as the backend (ProductService.getFilteredProducts).
+// Demo products have no createdAt, so a higher id counts as newer.
+const sortProducts = (items, sortType) => {
+  const list = [...items];
+  switch (String(sortType || "newest").toLowerCase()) {
+    case "oldest":
+      return list.sort((a, b) => a.id - b.id);
+    case "name":
+      return list.sort((a, b) => String(a.name).localeCompare(String(b.name), "az"));
+    case "cheap":
+    case "price_asc":
+    case "priceasc":
+      return list.sort((a, b) => lowestPrice(a) - lowestPrice(b));
+    case "expensive":
+    case "price_desc":
+    case "pricedesc":
+      return list.sort((a, b) => lowestPrice(b) - lowestPrice(a));
+    case "discount":
+    case "discounted":
+      return list.filter((p) => p.isDiscount).sort((a, b) => b.id - a.id);
+    default:
+      return list.sort((a, b) => b.id - a.id);
+  }
+};
+
 // Returns { data } for a GET the demo can answer, otherwise null.
 export const getDemoResponse = (config = {}) => {
   if (String(config.method || "get").toLowerCase() !== "get") return null;
@@ -31,7 +61,7 @@ export const getDemoResponse = (config = {}) => {
   const params = config.params || {};
 
   if (path === "/products/all") return { data: page(demoProducts, params) };
-  if (path === "/products/filter") return { data: page(demoProducts.filter((p) => matches(p, params)), params) };
+  if (path === "/products/filter") return { data: page(sortProducts(demoProducts.filter((p) => matches(p, params)), params.sortType), params) };
 
   const byId = path.match(/^\/products\/([^/]+)$/);
   if (byId) {

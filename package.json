@@ -6,7 +6,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "build:pages": "vite build --base=/Curtain-shop-web-site-frontend/",
+    "build:pages": "vite build --mode pages --base=/Curtain-shop-web-site-frontend/ && node -e \"import('node:fs').then((fs) => fs.copyFileSync('dist/index.html', 'dist/404.html'))\"",
     "preview": "vite preview",
     "test": "vitest"
   },

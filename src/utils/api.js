@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getDemoResponse, isBackendUnavailable } from "./demoApi.js";
 
 const normalizeApiBaseUrl = (value) => {
   const cleaned = String(value || "")
@@ -37,19 +36,24 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Backend down or not deployed (static demo): answer public product reads with demo data.
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (isBackendUnavailable(error)) {
-      const demo = getDemoResponse(error.config);
-      if (demo) {
-        console.warn(`API unavailable, showing demo data for ${error.config?.url}`);
-        return { status: 200, statusText: "OK", headers: {}, config: error.config, ...demo };
+// Demo fallback for the GitHub Pages demo build only (`npm run build:pages` loads .env.pages).
+// Everywhere else VITE_DEMO_FALLBACK is unset: this block and demoApi.js are dropped at build
+// time, so the real site always shows the backend's real responses and errors.
+if (import.meta.env.VITE_DEMO_FALLBACK === "true") {
+  api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const { getDemoResponse, isBackendUnavailable } = await import("./demoApi.js");
+      if (isBackendUnavailable(error)) {
+        const demo = getDemoResponse(error.config);
+        if (demo) {
+          console.warn(`API unavailable, showing demo data for ${error.config?.url}`);
+          return { status: 200, statusText: "OK", headers: {}, config: error.config, ...demo };
+        }
       }
-    }
-    return Promise.reject(error);
-  },
-);
+      return Promise.reject(error);
+    },
+  );
+}
 
 export default api;

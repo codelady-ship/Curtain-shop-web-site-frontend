@@ -78,8 +78,8 @@ const AdminLogin = ({ onLogin }: Props) => {
       setError("Reset kodu və yeni şifrə daxil edin");
       return;
     }
-    if (newPassword.length < 6) {
-      setError("Yeni şifrə ən azı 6 simvol olmalıdır");
+    if (newPassword.trim().length < 12) {
+      setError("Yeni şifrə ən azı 12 simvol olmalıdır");
       return;
     }
 

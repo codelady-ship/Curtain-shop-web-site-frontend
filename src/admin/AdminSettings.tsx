@@ -8,13 +8,12 @@ type AdminProfile = {
   name: string;
   email: string;
   phone: string;
-  resetCode: string;
   resetDeliveryStatus?: string;
   resetRequestedAt?: string;
 };
 
 const AdminSettings = ({ onLogout }: Props) => {
-  const [profile, setProfile] = useState<AdminProfile>({ name: "", email: "", phone: "", resetCode: "" });
+  const [profile, setProfile] = useState<AdminProfile>({ name: "", email: "", phone: "" });
   const [profileSaving, setProfileSaving] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -29,7 +28,6 @@ const AdminSettings = ({ onLogout }: Props) => {
       name: data.name || data.username || fallback.name || "Admin",
       email: data.email || "",
       phone: data.phone || "",
-      resetCode: data.resetCode || fallback.resetCode || "",
       resetDeliveryStatus: data.resetDeliveryStatus || "",
       resetRequestedAt: data.resetRequestedAt || "",
     });
@@ -37,7 +35,7 @@ const AdminSettings = ({ onLogout }: Props) => {
 
   useEffect(() => {
     getAdminProfile()
-      .then((res) => applyProfile(res.data || {}, { name: "Admin", email: "", phone: "", resetCode: "" }))
+      .then((res) => applyProfile(res.data || {}, { name: "Admin", email: "", phone: "" }))
       .catch(() => setProfile((prev) => ({ ...prev, name: prev.name || "Admin" })));
   }, []);
 
@@ -111,7 +109,7 @@ const AdminSettings = ({ onLogout }: Props) => {
           <div className="w-12 h-12 rounded-2xl bg-[#0A1128] text-[#C5A059] flex items-center justify-center"><UserCog size={22} /></div>
           <div>
             <h2 className="text-xl font-black text-[#0A1128]">Admin məlumatları</h2>
-            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Ad, email, telefon və son reset kodu</p>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Ad, email və telefon (şifrə bərpası yalnız bu ünvanlara göndərilir)</p>
           </div>
         </div>
         {profileMessage && <div className="rounded-2xl bg-emerald-50 text-emerald-700 px-4 py-3 text-sm font-bold">{profileMessage}</div>}
@@ -119,7 +117,6 @@ const AdminSettings = ({ onLogout }: Props) => {
         <input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} placeholder="Admin adı" className="admin-input" />
         <input value={profile.email} onChange={(e) => setProfile({ ...profile, email: e.target.value })} placeholder="Admin email" className="admin-input" />
         <input value={profile.phone} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} placeholder="Admin telefon / WhatsApp" className="admin-input" />
-        <input value={profile.resetCode || ""} readOnly placeholder="Son reset kodu" className="admin-input bg-slate-100 text-slate-500" />
         <button type="button" onClick={saveProfile} disabled={profileSaving} className="px-6 py-3 rounded-2xl bg-[#0A1128] text-[#C5A059] font-black flex items-center gap-2 disabled:opacity-60">
           {profileSaving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
           Məlumatları saxla

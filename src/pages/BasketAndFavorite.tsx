@@ -7,6 +7,7 @@ import LeadModal from "../components/LeadModal";
 import { buildLeadSelectionPayload, extractList, fetchProducts, getImageUrl, normalizeProduct, resolveWishlistProducts, submitLead } from "../utils/services";
 import { categoryLabel, getLang, localized, t } from "../utils/i18n";
 import PageShellControls from "../components/PageShellControls";
+import SEO from "../components/SEO";
 
 const BasketAndFavorite = () => {
   const { cartItems, totalItems, wishlist, removeFromCart, updateQuantity, toggleWishlist } = useCart();
@@ -65,6 +66,7 @@ const BasketAndFavorite = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#FBFBFA] dark:bg-slate-950">
+      <SEO title="Seçimlərim — səbət və bəyənilənlər | Perde.az" path="/basket" noindex />
       <header className="sticky top-0 z-50 flex h-20 items-center bg-black text-white shadow-2xl">
         <div className="container mx-auto flex items-center justify-between px-6">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-gray-400 transition-all hover:text-white">
@@ -116,7 +118,7 @@ const BasketAndFavorite = () => {
                       className="group flex items-center gap-4 rounded-[2rem] border border-gray-50 bg-white p-4 shadow-sm transition-all hover:border-[#C5A059]/30 dark:border-slate-800 dark:bg-slate-900"
                     >
                       <div className="h-28 w-24 flex-shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 dark:border-slate-800 dark:bg-slate-800">
-                        <img src={getImageUrl(product.imageUrl || product.image || "") || "/placeholder.jpg"} loading="lazy" className="h-full w-full object-cover" alt={product.name} />
+                        <img src={getImageUrl(product.imageUrl || product.image || "") || `${import.meta.env.BASE_URL}placeholder.svg`} loading="lazy" className="h-full w-full object-cover" alt={product.name} />
                       </div>
                       <div className="flex-1 space-y-1">
                         <h4 className="font-serif text-sm leading-tight text-slate-800 dark:text-white">{product.name}</h4>
@@ -159,7 +161,7 @@ const BasketAndFavorite = () => {
                             className="flex flex-col gap-4 rounded-[2.5rem] border border-gray-50 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:flex-row sm:items-center sm:gap-6"
                           >
                             <div className="h-36 w-28 flex-shrink-0 overflow-hidden rounded-[1.8rem] border border-gray-100 dark:border-slate-800">
-                              <img src={getImageUrl(item.selectedColor?.mainImage || item.selectedColor?.imageUrl || item.imageUrl || item.image || "") || "/placeholder.jpg"} loading="lazy" className="h-full w-full object-cover" alt={item.name} />
+                              <img src={getImageUrl(item.selectedColor?.mainImage || item.selectedColor?.imageUrl || item.imageUrl || item.image || "") || `${import.meta.env.BASE_URL}placeholder.svg`} loading="lazy" className="h-full w-full object-cover" alt={item.name} />
                             </div>
 
                             <div className="flex-1 space-y-2">

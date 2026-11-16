@@ -4,8 +4,8 @@ import { Quote, Phone, Mail, Clock } from 'lucide-react';
 import { getLang, t } from '../utils/i18n';
 
 // Şəkillərin importu
-import teamMainImg from '../assets/about/team-main.jpg';
-import mudirImg from '../assets/about/mudir.jpg';
+import teamMainImg from '../assets/about/team-main.webp';
+import mudirImg from '../assets/about/mudir.webp';
 
 const About: React.FC = () => {
   const goldColor = '#C5A059';

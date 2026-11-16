@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Lock, Loader2 } from "lucide-react";
 import { adminLogin, forgotAdminPassword, resetAdminPassword } from "../utils/services";
+import { IS_DEMO } from "../utils/api";
+import SEO from "../components/SEO";
+
+const DEMO_MESSAGE = "Admin panel backend tələb edir (requires backend). Bu GitHub Pages demosunda server yoxdur, ona görə giriş işləmir. Backend-i lokal işə salın və ya Render-ə yerləşdirin (README-yə baxın).";
 
 type Props = {
   onLogin: (user: any) => void;
@@ -8,7 +12,7 @@ type Props = {
 
 const AdminLogin = ({ onLogin }: Props) => {
   const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("huseyn1978");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -22,6 +26,10 @@ const AdminLogin = ({ onLogin }: Props) => {
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (IS_DEMO) {
+      setError(DEMO_MESSAGE);
+      return;
+    }
     setLoading(true);
     setError("");
     setMessage("");
@@ -65,7 +73,7 @@ const AdminLogin = ({ onLogin }: Props) => {
         setError(data.deliveryError || "Reset kodu avtomatik göndərilmədi");
       }
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Reset kod göndərilmədi");
+      setError(err?.isDemo ? DEMO_MESSAGE : err?.response?.data?.message || "Reset kod göndərilmədi");
     } finally {
       setRecoveryLoading(false);
     }
@@ -91,7 +99,7 @@ const AdminLogin = ({ onLogin }: Props) => {
       setNewPassword("");
       setMessage("Şifrə yeniləndi. Yeni şifrə ilə daxil ola bilərsiniz.");
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Şifrə yenilənmədi");
+      setError(err?.isDemo ? DEMO_MESSAGE : err?.response?.data?.message || "Şifrə yenilənmədi");
     } finally {
       setResetLoading(false);
     }
@@ -99,6 +107,7 @@ const AdminLogin = ({ onLogin }: Props) => {
 
   return (
     <div className="min-h-screen bg-[#0A1128] flex items-center justify-center px-4 py-10">
+      <SEO title="Admin panel | Perde.az" path="/admin" noindex />
       <form onSubmit={submit} className="w-full max-w-md bg-white rounded-[2rem] p-8 space-y-5 shadow-2xl">
         <div className="text-center space-y-2">
           <div className="mx-auto w-14 h-14 rounded-2xl bg-[#0A1128] text-[#C5A059] flex items-center justify-center">
@@ -108,6 +117,9 @@ const AdminLogin = ({ onLogin }: Props) => {
           <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Təhlükəsiz giriş</p>
         </div>
 
+        {IS_DEMO && !error && (
+          <div className="rounded-2xl bg-amber-50 text-amber-800 px-4 py-3 text-sm font-bold">{DEMO_MESSAGE}</div>
+        )}
         {message && <div className="rounded-2xl bg-emerald-50 text-emerald-700 px-4 py-3 text-sm font-bold">{message}</div>}
         {error && <div className="rounded-2xl bg-red-50 text-red-600 px-4 py-3 text-sm font-bold">{error}</div>}
 
@@ -118,7 +130,7 @@ const AdminLogin = ({ onLogin }: Props) => {
 
         <label className="block space-y-2">
           <span className="text-xs font-black uppercase text-slate-500">Şifrə / kod</span>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-2xl bg-slate-50 px-4 py-3 outline-none" placeholder="huseyn1978" />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-2xl bg-slate-50 px-4 py-3 outline-none" placeholder="••••••••••••" autoComplete="current-password" />
         </label>
 
         <button type="submit" disabled={loading} className="w-full rounded-2xl bg-[#0A1128] text-[#C5A059] py-4 font-black flex items-center justify-center gap-2 disabled:opacity-60">

@@ -13,6 +13,13 @@ const normalizeApiBaseUrl = (value) => {
   return "/api";
 };
 
+// True only in the GitHub Pages demo build (`npm run build:pages` loads .env.pages).
+export const IS_DEMO = import.meta.env.VITE_DEMO_FALLBACK === "true";
+
+// Demo build with no API URL at all: answer from the bundled demo data without any
+// network request, so the static site has no failing /api calls in the console.
+const DEMO_OFFLINE = IS_DEMO && !String(import.meta.env.VITE_API_BASE_URL || "").trim();
+
 const api = axios.create({
   baseURL: normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL),
   headers: {
@@ -31,6 +38,18 @@ api.interceptors.request.use(
       delete config.headers["Content-Type"];
     }
 
+    if (DEMO_OFFLINE) {
+      config.adapter = async (requestConfig) => {
+        const { getDemoResponse } = await import("./demoApi.js");
+        const demo = getDemoResponse(requestConfig);
+        if (demo) return { status: 200, statusText: "OK", headers: {}, config: requestConfig, ...demo };
+        const error = new Error("This feature requires the backend API (demo build).");
+        error.config = requestConfig;
+        error.isDemo = true;
+        throw error;
+      };
+    }
+
     return config;
   },
   (error) => Promise.reject(error),
@@ -39,7 +58,7 @@ api.interceptors.request.use(
 // Demo fallback for the GitHub Pages demo build only (`npm run build:pages` loads .env.pages).
 // Everywhere else VITE_DEMO_FALLBACK is unset: this block and demoApi.js are dropped at build
 // time, so the real site always shows the backend's real responses and errors.
-if (import.meta.env.VITE_DEMO_FALLBACK === "true") {
+if (IS_DEMO && !DEMO_OFFLINE) {
   api.interceptors.response.use(
     (response) => response,
     async (error) => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, CheckCircle2, Loader2, Phone, User, Upload, Mail } from "lucide-react";
 import { formatBytes, MAX_UPLOAD_IMAGE_BYTES, optimizeImageFile } from "../utils/imageCompression";
 import { getLang, t } from "../utils/i18n";
+import { IS_DEMO } from "../utils/api";
 
 const LeadModal = ({
   isOpen,
@@ -137,6 +138,11 @@ const LeadModal = ({
                 ? t("visualSuccess", lang)
                 : t("requestSuccess", lang)}
             </p>
+            {IS_DEMO && (
+              <p className="mx-4 mt-4 rounded-2xl bg-amber-50 px-4 py-3 text-xs font-bold text-amber-800">
+                {t("demoLeadNote", lang)}
+              </p>
+            )}
           </div>
         ) : (
           <div className="space-y-5">

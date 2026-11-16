@@ -8,6 +8,7 @@ import PartnersCarousel from "./PartnersCarousel";
 import LeadModal from "../components/LeadModal";
 import SEO from "../components/SEO";
 import { submitLead } from "../utils/services";
+import { IS_DEMO } from "../utils/api";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,7 +35,7 @@ const HomePage = () => {
       setTimeout(() => {
         setIsModalOpen(false);
         setIsSuccess(false);
-      }, 2500);
+      }, IS_DEMO ? 6000 : 2500);
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         setBackendErrors(error.response.data);
@@ -45,6 +46,7 @@ const HomePage = () => {
   return (
     <div className="relative overflow-x-hidden bg-white dark:bg-slate-950">
       <SEO />
+      <h1 className="sr-only">Perde.az — pərdə, tül, jalüz və aksesuar kataloqu</h1>
       <PromoSlider />
       <DiscountedProducts />
       <Shop compactHome />

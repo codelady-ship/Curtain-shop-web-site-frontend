@@ -22,6 +22,9 @@ const DEMO_OFFLINE = IS_DEMO && !String(import.meta.env.VITE_API_BASE_URL || "")
 
 const api = axios.create({
   baseURL: normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL),
+  // Demo build: give up after 8 s so a cold-starting free Render instance falls back to demo
+  // data (a timeout has no response, so isBackendUnavailable treats it as unavailable).
+  timeout: IS_DEMO ? 8000 : 0,
   headers: {
     "Content-Type": "application/json",
   },

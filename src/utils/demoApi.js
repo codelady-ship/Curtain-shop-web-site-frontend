@@ -1,6 +1,7 @@
 // Demo data for when the Spring Boot backend is not reachable
-// (e.g. the static GitHub Pages build). Only public product reads are served;
-// everything else (admin, leads, analytics) still needs the real backend.
+// (e.g. the static GitHub Pages build). Public product reads are served from
+// productData.json; lead forms and analytics hits get a harmless { demo: true } reply.
+// Admin endpoints, banners and partners are not served (the UI uses its built-in fallbacks).
 import demoProducts from "../store/productData.json";
 
 const page = (items, params = {}) => {
@@ -54,10 +55,16 @@ const sortProducts = (items, sortType) => {
   }
 };
 
-// Returns { data } for a GET the demo can answer, otherwise null.
+// Returns { data } for a request the demo can answer, otherwise null.
 export const getDemoResponse = (config = {}) => {
-  if (String(config.method || "get").toLowerCase() !== "get") return null;
+  const method = String(config.method || "get").toLowerCase();
   const path = String(config.url || "").split("?")[0];
+
+  // Nothing is sent or stored in demo mode: lead forms show a "demo" note instead,
+  // and analytics hits are simply dropped.
+  if (method === "post" && path === "/leads/submit") return { data: { demo: true } };
+  if (method === "post" && path.startsWith("/analytics/")) return { data: { demo: true } };
+  if (method !== "get") return null;
   const params = config.params || {};
 
   if (path === "/products/all") return { data: page(demoProducts, params) };

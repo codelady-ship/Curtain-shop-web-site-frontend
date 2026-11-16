@@ -26,6 +26,7 @@ import {
 import { useCart } from "../components/CartContest";
 import { formatBytes, MAX_UPLOAD_IMAGE_BYTES, optimizeImageFile } from "../utils/imageCompression";
 import { getLang, localized, t } from "../utils/i18n";
+import { IS_DEMO } from "../utils/api";
 
 type VisualType = "PROMO" | "MEASURE" | "VIRTUAL" | "IMAGE";
 
@@ -402,7 +403,7 @@ const PromoSlider = () => {
             className={`inline-flex min-w-[138px] items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-wider transition ${type === "PROMO" ? "bg-[#C5A059] text-black hover:bg-[#e2bf67]" : type === "VIRTUAL" ? "bg-[#C5A059] text-white hover:text-black" : "bg-[#070D24] text-white hover:bg-[#C5A059] hover:text-black"}`}
           >
             {state === "loading" ? <Loader2 size={18} className="animate-spin" /> : state === "success" ? <CheckCircle2 size={18} /> : null}
-            {state === "success" ? "Göndərildi" : buttonText}
+            {state === "success" ? (IS_DEMO ? t("demoSent", lang) : "Göndərildi") : buttonText}
           </button>
         </div>
 
@@ -426,6 +427,12 @@ const PromoSlider = () => {
         {state === "error" && (
           <p className={`mt-3 rounded-2xl px-4 py-3 text-xs font-black ${isDarkCard ? "bg-white/15 text-white ring-1 ring-white/15" : "bg-red-50 text-red-600"}`}>
             {errorMessage}
+          </p>
+        )}
+
+        {state === "success" && IS_DEMO && (
+          <p className={`mt-3 rounded-2xl px-4 py-3 text-xs font-black ${isDarkCard ? "bg-white/15 text-white ring-1 ring-white/15" : "bg-amber-50 text-amber-800"}`}>
+            {t("demoLeadNote", lang)}
           </p>
         )}
       </form>

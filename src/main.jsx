@@ -5,6 +5,11 @@ import App from './App';
 import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 
+// index.html carries static SEO tags for crawlers that do not run JavaScript.
+// Once React runs, <SEO> (react-helmet-async) owns them, so remove the static copies
+// to avoid duplicate canonical, description and Open Graph tags.
+document.querySelectorAll('[data-static-seo]').forEach((tag) => tag.remove());
+
 const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);
 

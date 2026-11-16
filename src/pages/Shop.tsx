@@ -157,6 +157,9 @@ const Shop = ({ compactHome = false }: ShopProps) => {
     return result;
   }, [dbProducts, searchTerm, category, room, sortBy, lang]);
 
+  // The full /products page owns the h1; on the home page the catalog is a section (h2).
+  const HeadingTag = compactHome ? "h2" : "h1";
+
   if (loading) {
     return (
       <div className="pt-40 text-center text-2xl font-black text-[#0A1128] dark:text-white">
@@ -167,11 +170,11 @@ const Shop = ({ compactHome = false }: ShopProps) => {
 
   return (
     <>
-      <SEO
-        title="Perde.az kataloq"
+      {!compactHome && <SEO
+        title="Perde.az kataloq | Pərdə, tül, jalüz"
         description="Pərdə, tül, jalüz, günəşlik, korniz və aksesuar məhsullarını kateqoriya, otaq tipi, axtarış və endirim filtirləri ilə seçin."
         path="/products"
-      />
+      />}
       <section
         className={`bg-[#f9f9f9] pb-16 dark:bg-slate-950 ${compactHome ? "pt-14" : "min-h-screen pt-28"}`}
         id="shop"
@@ -185,9 +188,9 @@ const Shop = ({ compactHome = false }: ShopProps) => {
             className="mb-8 flex flex-col items-center justify-center gap-4 text-center"
           >
             <div className="mx-auto">
-              <h2 className="font-serif text-4xl leading-tight text-slate-900 dark:text-white md:text-5xl">
+              <HeadingTag className="font-serif text-4xl leading-tight text-slate-900 dark:text-white md:text-5xl">
                 {t("catalog", lang)}
-              </h2>
+              </HeadingTag>
               <div className="mx-auto mt-4 h-[2px] w-16 rounded-full bg-[#C5A059]" />
             </div>
           </motion.div>

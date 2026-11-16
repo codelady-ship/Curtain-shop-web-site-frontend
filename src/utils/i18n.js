@@ -94,6 +94,8 @@ export const dictionary = {
     requiredPhoto: "Şəkil yükləmək mütləqdir",
     visualSuccess: "Otağınızın dizaynı hazırlanıb ən qısa zamanda WhatsApp nömrənizə göndəriləcək.",
     requestSuccess: "Müraciətiniz qəbul edildi. Tezliklə mütəxəssisimiz sizinlə əlaqə saxlayacaq.",
+    demoLeadNote: "Demo versiya: backend qoşulmadığı üçün müraciət heç yerə göndərilmədi və saxlanmadı.",
+    demoSent: "Demo",
   },
   RU: {
     campaign: "Акции",
@@ -188,6 +190,8 @@ export const dictionary = {
     requiredPhoto: "Необходимо загрузить изображение",
     visualSuccess: "Дизайн вашей комнаты будет подготовлен и отправлен в WhatsApp в ближайшее время.",
     requestSuccess: "Ваша заявка принята. Наш специалист скоро свяжется с вами.",
+    demoLeadNote: "Демо-версия: бэкенд не подключён, поэтому заявка никуда не отправлена и не сохранена.",
+    demoSent: "Демо",
   },
   EN: {
     campaign: "Campaigns",
@@ -282,6 +286,8 @@ export const dictionary = {
     requiredPhoto: "Photo upload is required",
     visualSuccess: "Your room design will be prepared and sent to your WhatsApp number shortly.",
     requestSuccess: "Your request has been received. Our specialist will contact you soon.",
+    demoLeadNote: "Demo build: no backend is connected, so this request was not sent or stored anywhere.",
+    demoSent: "Demo",
   },
 };
 

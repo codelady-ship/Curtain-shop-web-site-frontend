@@ -86,7 +86,7 @@ const AdminSettings = ({ onLogout }: Props) => {
           <div className="w-12 h-12 rounded-2xl bg-[#0A1128] text-[#C5A059] flex items-center justify-center"><KeyRound size={22} /></div>
           <div>
             <h2 className="text-xl font-black text-[#0A1128]">Admin kodunu dəyiş</h2>
-            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Default: huseyn1978</p>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Ən azı 12 simvol</p>
           </div>
         </div>
         {message && <div className="rounded-2xl bg-emerald-50 text-emerald-700 px-4 py-3 text-sm font-bold">{message}</div>}

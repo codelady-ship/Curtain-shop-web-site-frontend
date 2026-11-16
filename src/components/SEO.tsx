@@ -1,29 +1,34 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
 
-const SITE_URL = "https://perde.az";
+// Public URL of the deployed site, used for canonical and Open Graph links.
+// Defaults to the GitHub Pages demo; set VITE_SITE_URL when the site moves to its own domain.
+const SITE_URL = String(import.meta.env.VITE_SITE_URL || "https://codelady-ship.github.io/Curtain-shop-web-site-frontend").replace(/\/+$/, "");
 
 interface SEOProps {
   title?: string;
   description?: string;
   path?: string;
   image?: string;
+  noindex?: boolean;
 }
 
 const SEO = ({
-  title = "Perde.az — Pərdə, karniz və ev tekstili modelləri",
-  description = "Perde.az pərdə, tül, jalüz, karniz və aksesuar modelləri üçün onlayn kataloq, endirimlər və ölçü xidməti təqdim edir.",
+  title = "Perde.az | Pərdə, tül və jalüz kataloqu",
+  description = "Perde.az — pərdə, tül, jalüz, günəşlik və aksesuar modelləri üçün onlayn kataloq: rəng və ölçü seçimi, endirimli məhsullar, səbət və sifariş müraciəti.",
   path = "/",
   image = "/og-image.jpg",
+  noindex = false,
 }: SEOProps) => {
   const canonical = `${SITE_URL}${path}`;
-  const imageUrl = image.startsWith("http") ? image : `${SITE_URL}${image}`;
+  const imageUrl = /^https?:\/\//.test(image) ? image : `${SITE_URL}${image}`;
 
   return (
     <Helmet>
       <html lang="az" />
       <title>{title}</title>
       <meta name="description" content={description} />
+      {noindex && <meta name="robots" content="noindex" />}
       <link rel="canonical" href={canonical} />
       <meta property="og:type" content="website" />
       <meta property="og:title" content={title} />

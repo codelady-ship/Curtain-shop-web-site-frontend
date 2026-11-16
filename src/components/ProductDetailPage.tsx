@@ -7,6 +7,7 @@ import { getProductById, getAllProducts } from "../utils/services";
 import ProductCard from "../components/ProductCard";
 import { categoryLabel, getLang, localized, t } from "../utils/i18n";
 import PageShellControls from "../components/PageShellControls";
+import SEO from "../components/SEO";
 
 const getProductsArray = (data: any) => {
   if (Array.isArray(data)) return data;
@@ -180,8 +181,16 @@ const ProductDetailPage = () => {
     addToCart({ ...product, name: productName, description: productDescription, selectedColor, selectedSize, quantity });
   };
 
+  const seoImage = /^https?:///.test(activeImage) ? activeImage : undefined;
+
   return (
     <div className="flex min-h-screen flex-col bg-[#FBFBFA] dark:bg-slate-950">
+      <SEO
+        title={`${productName} | Perde.az`}
+        description={String(productDescription || `${productName} — rəng və ölçü seçimi ilə Perde.az kataloqunda.`).slice(0, 160)}
+        path={`/product/${product.id}`}
+        image={seoImage}
+      />
       <header className="sticky top-0 z-50 flex h-20 items-center bg-black text-white shadow-2xl">
         <div className="container mx-auto flex items-center justify-between px-6">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-gray-400 transition-all hover:text-white">

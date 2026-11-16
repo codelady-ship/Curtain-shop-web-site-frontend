@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /Curtain-shop-web-site-frontend/admin
 
-Sitemap: https://perde.az/sitemap.xml
+Sitemap: https://codelady-ship.github.io/Curtain-shop-web-site-frontend/sitemap.xml

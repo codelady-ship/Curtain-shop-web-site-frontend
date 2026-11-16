@@ -1,7 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig({
+// GitHub Pages serves the demo under /Curtain-shop-web-site-frontend/ (`npm run build:pages`).
+// Every other build (local dev, or a real host such as Vercel, Netlify or nginx) uses "/".
+export default defineConfig(({ mode }) => ({
+  base: mode === "pages" ? "/Curtain-shop-web-site-frontend/" : "/",
   plugins: [react()],
   build: {
     chunkSizeWarningLimit: 3000,
@@ -28,4 +31,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

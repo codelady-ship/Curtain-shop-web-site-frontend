@@ -20,7 +20,10 @@ const SEO = ({
   image = "/og-image.jpg",
   noindex = false,
 }: SEOProps) => {
-  const canonical = `${SITE_URL}${path}`;
+  // GitHub Pages serves each route from a folder and redirects /products to /products/,
+  // so the Pages build uses the trailing-slash URL (the same one sitemap.xml lists).
+  const pagesPath = import.meta.env.MODE === "pages" && path !== "/" && !path.endsWith("/") ? `${path}/` : path;
+  const canonical = `${SITE_URL}${pagesPath}`;
   const imageUrl = /^https?:\/\//.test(image) ? image : `${SITE_URL}${image}`;
 
   return (

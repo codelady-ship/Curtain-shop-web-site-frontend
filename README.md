@@ -66,7 +66,7 @@ npm run build        # dist/ with base "/", no demo fallback; serve it with ngin
 
 The backend must allow your site's origin in `CORS_ALLOWED_ORIGINS`.
 
-To point the **Pages** build at a running API, put the same two `VITE_API_*` lines in `.env.pages.local`. The site then shows real data and only falls back to the demo products if the API cannot be reached. A free Render service can take up to about a minute to wake up.
+To point the **Pages** site at a running API, add the same two lines (`VITE_API_BASE_URL`, `VITE_BACKEND_ORIGIN`) to the committed `.env.pages` and push to `main`. These URLs are public, and the workflow builds from the repo. For a local test only, use `.env.pages.local`. The site then shows real data and only falls back to the demo products if the API cannot be reached. A free Render service can take up to about a minute to wake up.
 
 | Variable | Used for | Default |
 | --- | --- | --- |

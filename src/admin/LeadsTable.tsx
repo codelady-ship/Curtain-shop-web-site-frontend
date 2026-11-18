@@ -616,7 +616,7 @@ const LeadsTable = ({ filter = "ALL" }: { filter?: string }) => {
                       <button
                         type="button"
                         onClick={() => handleOpenMessageModal(lead)}
-                        className="p-3 bg-emerald-50 text-emerald-600 rounded-xl inline-block hover:bg-emerald-600 hover:text-white transition-all"
+                        className="p-3 min-w-[44px] min-h-[44px] bg-emerald-50 text-emerald-600 rounded-xl inline-flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all"
                         title="Promo mesajı aç"
                       >
                         <MessageCircle size={18} />
@@ -627,7 +627,7 @@ const LeadsTable = ({ filter = "ALL" }: { filter?: string }) => {
                       <button
                         type="button"
                         onClick={() => handleSoftDelete(lead)}
-                        className="p-3 bg-red-50 text-red-600 rounded-xl inline-block hover:bg-red-600 hover:text-white transition-all"
+                        className="p-3 min-w-[44px] min-h-[44px] bg-red-50 text-red-600 rounded-xl inline-flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"
                         title="Cədvəldən gizlət"
                       >
                         <Trash2 size={18} />

@@ -18,7 +18,7 @@ The Pages build runs **without a backend**:
 - products come from `src/store/productData.json`, with search, filters, sorting and paging done in the browser;
 - campaign banners and partners use the built-in fallbacks;
 - lead and order forms show a clear "Demo" confirmation and send nothing;
-- the admin login says it needs the backend;
+- the admin panel has a **Demo admin** button (login `demo` / `demo1234`, read-only): it signs in to the live API, where writes answer 403 and show a toast; if the API is asleep or unreachable it runs on an in-browser sandbox built from the demo data (changes stay in the tab only). Admin URL: `https://codelady-ship.github.io/Curtain-shop-web-site-frontend/admin/`;
 - no request goes to `/api`, so the console has no failing network calls.
 
 ## Features

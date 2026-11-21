@@ -1,10 +1,20 @@
 import React, { useState } from "react";
-import { Lock, Loader2 } from "lucide-react";
+import { Lock, Loader2, Eye } from "lucide-react";
 import { adminLogin, forgotAdminPassword, resetAdminPassword } from "../utils/services";
-import { IS_DEMO } from "../utils/api";
+import api, { IS_DEMO } from "../utils/api";
+// Loaded on demand (also lazily by api.js), so the sandbox stays out of the main bundle.
+const loadSandbox = () => import("../utils/adminSandbox");
 import SEO from "../components/SEO";
 
-const DEMO_MESSAGE = "Admin panel backend tələb edir (requires backend). Bu GitHub Pages demosunda server yoxdur, ona görə giriş işləmir. Backend-i lokal işə salın və ya Render-ə yerləşdirin (README-yə baxın).";
+const DEMO_MESSAGE = "Server hazırda cavab vermir (Render pulsuz serveri oyanır). Bir az sonra yenidən cəhd edin və ya \"Demo admin\" ilə baxın.";
+
+// Public read-only demo account (backend Liquibase 9.1). The password is public by design.
+export const DEMO_LOGIN = { username: "demo", password: "demo1234" };
+// The "Demo admin" button: on the GitHub Pages demo build, or any build with VITE_ADMIN_DEMO=true.
+const SHOW_DEMO_BUTTON = IS_DEMO || import.meta.env.VITE_ADMIN_DEMO === "true";
+
+const isUnavailable = (err: any) =>
+  Boolean(err?.isDemo) || !err?.response || !String(err.response.headers?.["content-type"] || "").includes("json");
 
 type Props = {
   onLogin: (user: any) => void;
@@ -24,12 +34,11 @@ const AdminLogin = ({ onLogin }: Props) => {
   const [resetCode, setResetCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
+  const [demoLoading, setDemoLoading] = useState(false);
+
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (IS_DEMO) {
-      setError(DEMO_MESSAGE);
-      return;
-    }
+    (await loadSandbox()).endSandboxSession();
     setLoading(true);
     setError("");
     setMessage("");
@@ -40,9 +49,31 @@ const AdminLogin = ({ onLogin }: Props) => {
       localStorage.setItem("adminUser", JSON.stringify(data.user || { username }));
       onLogin(data.user || { username });
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Admin giriş məlumatları yanlışdır");
+      setError(isUnavailable(err) ? DEMO_MESSAGE : err?.response?.data?.message || "Admin giriş məlumatları yanlışdır");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Read-only demo account on the real API; if the API cannot be reached (asleep, offline,
+  // rate-limited), the same panel runs on an in-browser sandbox (adminSandbox.js) instead.
+  const enterDemo = async () => {
+    (await loadSandbox()).endSandboxSession();
+    setDemoLoading(true);
+    setError("");
+    setMessage("");
+    try {
+      const response = await api.post("/admin/auth/login", DEMO_LOGIN, { timeout: 6000 });
+      const data = response.data || {};
+      if (!data.token) throw new Error("no token");
+      const user = { ...(await loadSandbox()).DEMO_USER, ...(data.user || {}), demo: true, sandbox: false };
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("adminUser", JSON.stringify(user));
+      onLogin(user);
+    } catch {
+      onLogin((await loadSandbox()).startSandboxSession());
+    } finally {
+      setDemoLoading(false);
     }
   };
 
@@ -117,8 +148,16 @@ const AdminLogin = ({ onLogin }: Props) => {
           <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Təhlükəsiz giriş</p>
         </div>
 
-        {IS_DEMO && !error && (
-          <div className="rounded-2xl bg-amber-50 text-amber-800 px-4 py-3 text-sm font-bold">{DEMO_MESSAGE}</div>
+        {SHOW_DEMO_BUTTON && (
+          <div className="space-y-2">
+            <button type="button" onClick={enterDemo} disabled={demoLoading} className="w-full min-h-[44px] rounded-2xl bg-[#C5A059] text-[#0A1128] py-4 font-black flex items-center justify-center gap-2 disabled:opacity-60">
+              {demoLoading ? <Loader2 className="animate-spin" size={18} /> : <Eye size={18} />}
+              Demo admin
+            </button>
+            <p className="text-center text-xs text-slate-500 font-bold">
+              Demo giriş: {DEMO_LOGIN.username} / {DEMO_LOGIN.password} — yalnız baxış, dəyişikliklər saxlanılmır.
+            </p>
+          </div>
         )}
         {message && <div className="rounded-2xl bg-emerald-50 text-emerald-700 px-4 py-3 text-sm font-bold">{message}</div>}
         {error && <div className="rounded-2xl bg-red-50 text-red-600 px-4 py-3 text-sm font-bold">{error}</div>}
@@ -138,7 +177,7 @@ const AdminLogin = ({ onLogin }: Props) => {
           Daxil ol
         </button>
 
-        <button type="button" onClick={() => setRecoveryOpen((value) => !value)} className="w-full text-center text-xs font-black uppercase tracking-widest text-slate-500 hover:text-[#0A1128]">
+        <button type="button" onClick={() => setRecoveryOpen((value) => !value)} className="w-full min-h-[44px] text-center text-xs font-black uppercase tracking-widest text-slate-500 hover:text-[#0A1128]">
           Şifrəni / kodu unutdum
         </button>
 

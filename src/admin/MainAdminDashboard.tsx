@@ -10,6 +10,7 @@ import DashboardView from './DashboardView';
 import AdminLogin from './AdminLogin';
 import BannerManager from './BannerManager';
 import AdminSettings from './AdminSettings';
+import DemoNotice from './DemoNotice';
 
 const MainAdminDashboard = () => {
   const activeTab = useAdminStore((state: any) => state.activeTab);
@@ -29,6 +30,7 @@ const MainAdminDashboard = () => {
   }, [checkAndReset, storeAdminUser]);
 
   const logout = () => {
+    import('../utils/adminSandbox').then((sandbox) => sandbox.endSandboxSession());
     localStorage.removeItem('token');
     localStorage.removeItem('adminUser');
     setAdminUser(null);
@@ -70,7 +72,7 @@ const MainAdminDashboard = () => {
       <main className="flex-1 flex flex-col min-w-0 lg:ml-0">
         <header className="h-20 bg-white border-b px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-4">
-            <button type="button" onClick={() => setSidebarOpen(true)} className="lg:hidden p-3 rounded-2xl bg-slate-50 text-[#0A1128]"><Menu size={20} /></button>
+            <button type="button" onClick={() => setSidebarOpen(true)} aria-label="Menyu" className="lg:hidden p-3 min-w-[44px] min-h-[44px] rounded-2xl bg-slate-50 text-[#0A1128]"><Menu size={20} /></button>
             <div>
               <h2 className="text-lg md:text-xl font-bold text-[#0A1128]">{titles[activeTab] || 'Admin Panel'}</h2>
               <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Perde.az Management v2.0</p>
@@ -85,9 +87,10 @@ const MainAdminDashboard = () => {
             <div className="w-10 h-10 bg-[#0A1128] rounded-xl flex items-center justify-center border-2 border-[#C5A059]">
               <span className="text-[#C5A059] font-bold">{String(displayName).charAt(0).toUpperCase()}</span>
             </div>
-            <button type="button" onClick={logout} title="Çıxış" className="p-2 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-600"><LogOut size={18} /></button>
+            <button type="button" onClick={logout} title="Çıxış" aria-label="Çıxış" className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-600"><LogOut size={18} /></button>
           </div>
         </header>
+        <DemoNotice user={adminUser} />
 
         <div className="p-4 md:p-6">
           <div className="animate-in fade-in duration-500">{renderContent()}</div>

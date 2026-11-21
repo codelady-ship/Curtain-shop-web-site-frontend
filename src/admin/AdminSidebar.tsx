@@ -24,7 +24,7 @@ const AdminSidebar = ({ isOpen = true, onClose }: Props) => {
     <aside className={`${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:sticky top-0 left-0 z-50 w-72 bg-black h-screen p-6 text-white flex flex-col transition-transform duration-300`}>
       <div className="mb-10 px-2 flex items-center justify-between">
         <div className="text-[#C5A059] font-serif text-2xl font-bold tracking-tighter">PERDE.AZ</div>
-        <button type="button" onClick={onClose} className="lg:hidden p-2 rounded-xl hover:bg-white/10"><X size={18} /></button>
+        <button type="button" onClick={onClose} aria-label="Bağla" className="lg:hidden p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-white/10"><X size={18} /></button>
       </div>
       <nav className="flex-1 space-y-2 overflow-y-auto pr-1">
         {menuItems.map((item) => (

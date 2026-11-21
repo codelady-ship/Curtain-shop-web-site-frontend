@@ -448,7 +448,7 @@ const LeadsTable = ({ filter = "ALL" }: { filter?: string }) => {
               key={platform.id}
               type="button"
               onClick={() => setSelectedSocial(platform.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-xl text-[10px] font-black uppercase transition-all ${
                 selectedSocial === platform.id
                   ? "bg-[#0A1128] text-[#C5A059] shadow-md"
                   : "text-slate-400 hover:bg-white"
@@ -602,7 +602,7 @@ const LeadsTable = ({ filter = "ALL" }: { filter?: string }) => {
                         onChange={(e) =>
                           handleStatusChange(lead.id, e.target.value)
                         }
-                        className="min-w-[150px] px-3 py-2 bg-slate-50 rounded-xl text-xs font-bold outline-none"
+                        className="min-w-[150px] min-h-[44px] px-3 py-2 bg-slate-50 rounded-xl text-xs font-bold outline-none"
                       >
                         {statusOptions.map((status) => (
                           <option key={status.value} value={status.value}>
@@ -616,7 +616,7 @@ const LeadsTable = ({ filter = "ALL" }: { filter?: string }) => {
                       <button
                         type="button"
                         onClick={() => handleOpenMessageModal(lead)}
-                        className="p-3 bg-emerald-50 text-emerald-600 rounded-xl inline-block hover:bg-emerald-600 hover:text-white transition-all"
+                        className="p-3 min-w-[44px] min-h-[44px] bg-emerald-50 text-emerald-600 rounded-xl inline-flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all"
                         title="Promo mesajı aç"
                       >
                         <MessageCircle size={18} />
@@ -627,7 +627,7 @@ const LeadsTable = ({ filter = "ALL" }: { filter?: string }) => {
                       <button
                         type="button"
                         onClick={() => handleSoftDelete(lead)}
-                        className="p-3 bg-red-50 text-red-600 rounded-xl inline-block hover:bg-red-600 hover:text-white transition-all"
+                        className="p-3 min-w-[44px] min-h-[44px] bg-red-50 text-red-600 rounded-xl inline-flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"
                         title="Cədvəldən gizlət"
                       >
                         <Trash2 size={18} />

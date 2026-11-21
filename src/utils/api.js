@@ -30,9 +30,41 @@ const api = axios.create({
   },
 });
 
+// Public "Demo admin" (AdminLogin): "server" = read-only demo account on the real API
+// (writes answer 403 + a friendly message), "sandbox" = the API was unreachable, so every
+// request is answered in the browser by adminSandbox.js (changes stay in this tab only).
+const readStorage = (key) => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+const isSandboxMode = () => readStorage("perde_admin_mode") === "sandbox";
+const isServerDemoUser = () => {
+  try {
+    return Boolean(JSON.parse(readStorage("adminUser") || "null")?.demo) && !isSandboxMode();
+  } catch {
+    return false;
+  }
+};
+const sandboxAdapter = async (requestConfig) => (await import("./adminSandbox.js")).sandboxAdapter(requestConfig);
+
+// Shown as a toast by the admin panel (MainAdminDashboard -> DemoNotice).
+export const DEMO_NOTICE_EVENT = "perde:demo-notice";
+const announceDemo = (message) => {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(DEMO_NOTICE_EVENT, { detail: message || "Demo rejimi: dəyişikliklər saxlanılmır." }));
+};
+
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    if (isSandboxMode()) {
+      config.adapter = sandboxAdapter;
+      return config;
+    }
+
+    const token = readStorage("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -61,6 +93,24 @@ api.interceptors.request.use(
 // Demo fallback for the GitHub Pages demo build only (`npm run build:pages` loads .env.pages).
 // Everywhere else VITE_DEMO_FALLBACK is unset: this block and demoApi.js are dropped at build
 // time, so the real site always shows the backend's real responses and errors.
+// Demo admin: friendly toast for refused demo writes; if the API goes away mid-session
+// (Render free instance asleep), continue in the in-browser sandbox instead of failing.
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const response = error?.response;
+    if (response?.status === 403 && response.data?.demo) {
+      announceDemo(response.data.message);
+    } else if (isServerDemoUser() && error?.config && (!response || !String(response.headers?.["content-type"] || "").includes("json"))) {
+      const { startSandboxSession } = await import("./adminSandbox.js");
+      startSandboxSession();
+      announceDemo("Server cavab vermir: demo admin brauzerdəki demo rejimində davam edir.");
+      return sandboxAdapter(error.config);
+    }
+    return Promise.reject(error);
+  },
+);
+
 if (IS_DEMO && !DEMO_OFFLINE) {
   api.interceptors.response.use(
     (response) => response,

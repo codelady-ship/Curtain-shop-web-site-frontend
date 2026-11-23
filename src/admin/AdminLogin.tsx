@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Lock, Loader2, Eye } from "lucide-react";
 import { adminLogin, forgotAdminPassword, resetAdminPassword } from "../utils/services";
-import api, { IS_DEMO } from "../utils/api";
+import { IS_DEMO } from "../utils/api";
 // Loaded on demand (also lazily by api.js), so the sandbox stays out of the main bundle.
 const loadSandbox = () => import("../utils/adminSandbox");
 import SEO from "../components/SEO";
@@ -55,23 +55,17 @@ const AdminLogin = ({ onLogin }: Props) => {
     }
   };
 
-  // Read-only demo account on the real API; if the API cannot be reached (asleep, offline,
-  // rate-limited), the same panel runs on an in-browser sandbox (adminSandbox.js) instead.
+  // The "Demo admin" button opens the in-browser sandbox (adminSandbox.js) directly. It sends
+  // nothing to the API, so there is no failed login in the console and no wait for a sleeping
+  // Render instance.
   const enterDemo = async () => {
-    (await loadSandbox()).endSandboxSession();
     setDemoLoading(true);
     setError("");
     setMessage("");
     try {
-      const response = await api.post("/admin/auth/login", DEMO_LOGIN, { timeout: 6000 });
-      const data = response.data || {};
-      if (!data.token) throw new Error("no token");
-      const user = { ...(await loadSandbox()).DEMO_USER, ...(data.user || {}), demo: true, sandbox: false };
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("adminUser", JSON.stringify(user));
-      onLogin(user);
-    } catch {
-      onLogin((await loadSandbox()).startSandboxSession());
+      const sandbox = await loadSandbox();
+      sandbox.endSandboxSession();
+      onLogin(sandbox.startSandboxSession());
     } finally {
       setDemoLoading(false);
     }

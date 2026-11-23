@@ -55,8 +55,9 @@ const AdminLogin = ({ onLogin }: Props) => {
     }
   };
 
-  // Read-only demo account on the real API; if the API cannot be reached (asleep, offline,
-  // rate-limited), the same panel runs on an in-browser sandbox (adminSandbox.js) instead.
+  // Read-only demo account on the real API; if that login fails for any reason (asleep,
+  // offline, rate-limited, timed out, 401), the same panel runs on an in-browser sandbox
+  // (adminSandbox.js) instead. This button never shows an error message to the visitor.
   const enterDemo = async () => {
     (await loadSandbox()).endSandboxSession();
     setDemoLoading(true);

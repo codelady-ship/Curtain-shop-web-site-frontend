@@ -545,16 +545,12 @@ const PromoSlider = () => {
             </motion.div>
           </AnimatePresence>
 
-          {sliderItems.length > 1 && (
-            <>
-              <button onClick={prev} type="button" aria-label="Əvvəlki kampaniya" className="absolute left-2 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-2xl bg-white text-slate-900 shadow-xl ring-1 ring-slate-100 transition hover:bg-[#C5A059] hover:text-black md:flex dark:bg-slate-900 dark:text-white dark:ring-slate-800"><ChevronLeft size={21} /></button>
-              <button onClick={next} type="button" aria-label="Növbəti kampaniya" className="absolute right-2 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-2xl bg-white text-slate-900 shadow-xl ring-1 ring-slate-100 transition hover:bg-[#C5A059] hover:text-black md:flex dark:bg-slate-900 dark:text-white dark:ring-slate-800"><ChevronRight size={21} /></button>
-            </>
-          )}
         </div>
 
         {sliderItems.length > 1 && (
           <div className="mt-6 flex items-center justify-center gap-2">
+            {/* Arrows sit beside the dots, not over the cards, so they never cover slide text. */}
+            <button onClick={prev} type="button" aria-label="Əvvəlki kampaniya" className="mr-3 hidden h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-900 shadow-xl ring-1 ring-slate-100 transition hover:bg-[#C5A059] hover:text-black md:flex dark:bg-slate-900 dark:text-white dark:ring-slate-800"><ChevronLeft size={21} /></button>
             {sliderItems.map((banner, i) => (
               <button
                 key={banner.id || i}
@@ -564,6 +560,7 @@ const PromoSlider = () => {
                 className={`h-2.5 rounded-full transition-all ${activeIndex === i ? "w-12 bg-[#C5A059]" : "w-2.5 bg-slate-300 dark:bg-slate-700"}`}
               />
             ))}
+            <button onClick={next} type="button" aria-label="Növbəti kampaniya" className="ml-3 hidden h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-900 shadow-xl ring-1 ring-slate-100 transition hover:bg-[#C5A059] hover:text-black md:flex dark:bg-slate-900 dark:text-white dark:ring-slate-800"><ChevronRight size={21} /></button>
           </div>
         )}
       </div>
